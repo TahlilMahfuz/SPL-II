@@ -66,45 +66,48 @@ app.post("/user/usersignup",async (req,res) =>{
 
     if(userpassword!=cuserpassword){
         error.push({message: "Passwords do not match"});
+        res.render('user/usersignup',{error});
     }
-    let hash=await bcrypt.hash(userpassword,10);
-    console.log(hash);
+    else{
+        let hash=await bcrypt.hash(userpassword,10);
+        console.log(hash);
 
-    pool.query(
-        `select * from users where useremail=$1`,[useremail],
-        (err,results)=>{
-            if(err){
-                throw err;
-            }
-            console.log("database connected");
-            console.log(results.rows);
+        pool.query(
+            `select * from users where useremail=$1`,[useremail],
+            (err,results)=>{
+                if(err){
+                    throw err;
+                }
+                console.log("database connected");
+                console.log(results.rows);
 
-            if(results.rows.length>0){
-                error.push({message: "Email already exists"});
-                res.render("user/usersignup",{error});
+                if(results.rows.length>0){
+                    error.push({message: "Email already exists"});
+                    res.render("user/usersignup",{error});
+                }
+                else{
+                    //insert the values
+                    pool.query(
+                        `INSERT INTO users (username,usernid,useremail,userphone,userpassword)
+                            VALUES ($1, $2, $3, $4, $5)
+                            RETURNING username,usernid,useremail,userphone,userpassword`,
+                        [username,usernid,useremail,userphone,hash],
+                        (err, results) => {
+                        if (err) {
+                            throw err;
+                        }
+                        console.log(results.rows);
+                        console.log("Data inserted");
+                        req.flash("success_msg", "You are now registered. Please log in");
+                        }
+                    );
+                    let no_err=[];
+                    no_err.push({message:"Account created. You can log in now"});
+                    res.render("user/usersignup",{no_err});
+                }
             }
-            else{
-                //insert the values
-                pool.query(
-                    `INSERT INTO users (username,usernid,useremail,userphone,userpassword)
-                        VALUES ($1, $2, $3, $4, $5)
-                        RETURNING username,usernid,useremail,userphone,userpassword`,
-                    [username,usernid,useremail,userphone,hash],
-                    (err, results) => {
-                      if (err) {
-                        throw err;
-                      }
-                      console.log(results.rows);
-                      console.log("Data inserted");
-                      req.flash("success_msg", "You are now registered. Please log in");
-                    }
-                  );
-                let no_err=[];
-                no_err.push({message:"Account created. You can log in now"});
-                res.render("user/usersignup",{no_err});
-            }
-        }
-    );
+        );
+    }
 })
 
 
