@@ -10,8 +10,8 @@ const sendMail=async(req,res)=>{
         port: 587,
         secure: false,
         auth: {
-            user: 'servicelagbe@gmail.com',
-            pass: 'fxjraufpgwdtmfzq'
+            user: process.env.Authority_Email,
+            pass: process.env.email_password
         }
     });
 
@@ -22,7 +22,6 @@ const sendMail=async(req,res)=>{
         text: "Welcome to smetro", 
         html: "<b>Welcome</b>",
     });
-    console.log("Email sent: %s",info.messageId);
     res.json(info);
 };
 
