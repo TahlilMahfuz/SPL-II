@@ -7,6 +7,7 @@ const flash=require("express-flash");
 const passport=require('passport');
 
 const initializePassport=require('./passportConfig');
+const sendMail = require("./controllers/sendmail");
 
 initializePassport(passport);
 
@@ -53,6 +54,7 @@ app.get("/userlogout", (req, res) => {
       res.redirect("/user/userlogin");
     });
 });
+app.get("/sendMail",sendMail);
 
 
 
