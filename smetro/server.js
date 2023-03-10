@@ -54,15 +54,49 @@ app.get("/userlogout", (req, res) => {
       res.redirect("/user/userlogin");
     });
 });
-app.get("/sendMail",sendMail);
+// app.get("/sendMail",sendMail());
 
 
 
 
 //POST METHODS
+
+app.post("/user/register",async (req,res) =>{
+    //insert the values
+    let {username,usernid,useremail,userphone,userpassword,userotp,uservarcode} = req.body;
+    let error=[];
+    if(userotp!=uservarcode){
+        error.push({message:"Invalid varification code"});
+        res.render("user/register",{error});
+    }
+    else{
+        let hash=await bcrypt.hash(userpassword,10);
+        console.log(hash);
+        pool.query(
+            `INSERT INTO users (username,usernid,useremail,userphone,userpassword)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING username,usernid,useremail,userphone,userpassword`,
+            [username,usernid,useremail,userphone,hash],
+            (err, results) => {
+            if (err) {
+                throw err;
+            }
+            console.log(results.rows);
+            console.log("Data inserted");
+            req.flash("success_msg", "You are now registered. Please log in");
+            }
+        );
+        let no_err=[];
+        no_err.push({message:"Account created. You can log in now"});
+        res.render("user/userlogin",{no_err});
+    }
+})
+
 app.post("/user/usersignup",async (req,res) =>{
+
     let {username,usernid,useremail,userphone,userpassword,cuserpassword} = req.body;
-    //console.log(username,usernid,useremail,userphone,userpassword,cuserpassword);
+
+    console.log(username,usernid,useremail,userphone,userpassword,cuserpassword);
     
     let error=[];
 
@@ -71,8 +105,7 @@ app.post("/user/usersignup",async (req,res) =>{
         res.render('user/usersignup',{error});
     }
     else{
-        let hash=await bcrypt.hash(userpassword,10);
-        console.log(hash);
+        const userotp = Math.floor(1000 + Math.random() * 9000);
 
         pool.query(
             `select * from users where useremail=$1`,[useremail],
@@ -88,24 +121,8 @@ app.post("/user/usersignup",async (req,res) =>{
                     res.render("user/usersignup",{error});
                 }
                 else{
-                    //insert the values
-                    pool.query(
-                        `INSERT INTO users (username,usernid,useremail,userphone,userpassword)
-                            VALUES ($1, $2, $3, $4, $5)
-                            RETURNING username,usernid,useremail,userphone,userpassword`,
-                        [username,usernid,useremail,userphone,hash],
-                        (err, results) => {
-                        if (err) {
-                            throw err;
-                        }
-                        console.log(results.rows);
-                        console.log("Data inserted");
-                        req.flash("success_msg", "You are now registered. Please log in");
-                        }
-                    );
-                    let no_err=[];
-                    no_err.push({message:"Account created. You can log in now"});
-                    res.render("user/usersignup",{no_err});
+                    sendMail(useremail,userotp);
+                    res.render('user/register',{username,usernid,useremail,userphone,userpassword,userotp});
                 }
             }
         );

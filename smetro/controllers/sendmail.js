@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-const sendMail=async(req,res)=>{
+const sendMail=async(useremail,otp)=>{
     let testAccount = await nodemailer.createTestAccount();
 
     //connect with smtp
@@ -17,12 +17,12 @@ const sendMail=async(req,res)=>{
 
     let info = await transporter.sendMail({
         from: '"SMetro 👻" <smetro@gmail.com>',
-        to: "piwepag807@terkoer.com",
+        to: useremail,
         subject: "Verify your account", 
-        text: "Welcome to smetro", 
-        html: "<b>Welcome</b>",
+        text: "Your otp varification code is "+ otp, 
+        // html: "<b>Welcome</b>",
     });
-    res.json(info);
+    // res.json(info);
 };
 
 module.exports=sendMail;
