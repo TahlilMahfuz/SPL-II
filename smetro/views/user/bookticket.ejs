@@ -63,8 +63,9 @@
                                         <%= train.seats%>
                                     </td>
                                     <td>
-                                        <form action="approvedserviceproviders.php" method="post">
-                                            <input type="hidden" name="delete_id" value="<%=train.trainid%>">
+                                        <form action="/user/confirmbook" method="post">
+                                            <input type="hidden" maxlength="50" class="form-control" 
+                                            id="trainid" name="trainid" aria-describedby="emailHelp" value=<%=train.trainid %> required>
                                             <button type="submit" class="btn btn-success">Book Now</button><br><br>
                                         </form>
                                         

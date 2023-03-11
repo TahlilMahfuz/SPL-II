@@ -5,6 +5,8 @@ const bcrypt=require("bcrypt");
 const session=require("express-session");
 const flash=require("express-flash");
 const passport=require('passport');
+const qr=require('qrcode');
+const fs=require('fs');
 
 const initializePassport=require('./passportConfig');
 const sendMail = require("./controllers/sendmail");
@@ -30,6 +32,12 @@ app.use(
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+
+
+
+
 
 
 //GET METHODS
@@ -61,6 +69,13 @@ app.get("/userlogout", (req, res) => {
       res.redirect("/user/userlogin");
     });
 });
+
+
+
+
+
+
+
 
 
 
@@ -170,7 +185,52 @@ app.post("/user/bookticket",async (req,res) =>{
             res.render("user/dashboard", { error, arr});
           }
         }
-      );
+    );
+})
+
+app.post("/user/confirmbook",async (req,res) =>{
+
+    let {trainid} = req.body;
+    console.log("trainID: ");
+
+    console.log(trainid);
+
+    let uid=req.session.user.userid;
+
+    pool.query(
+    `INSERT INTO reservation (trainid, userid)
+    VALUES ($1, $2)
+    RETURNING reservationid`,
+    [trainid, uid],
+    async (err, results) => {
+            if (err) {
+                throw err;
+            }
+            console.log("database connected");
+            console.log(results);
+
+            const reservationId = results.rows[0].reservationid;
+            console.log("RID: "+reservationId);
+
+            //Generate QR code
+            let stjson=JSON.stringify(reservationId);
+            qr.toFile("qr.png",stjson,function(err){
+                if(err)
+                    throw err;
+            });
+            qr.toString(stjson,{type:"terminal"},function (err,code) {
+                if(err){
+                    throw err;
+                }
+                else{
+                    console.log(code);
+                }
+            });
+
+
+            res.render("user/dashboard");
+        }
+    );
 })
 
 
