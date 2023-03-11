@@ -8,6 +8,7 @@ const passport=require('passport');
 
 const initializePassport=require('./passportConfig');
 const sendMail = require("./controllers/sendmail");
+const cookieParser = require("cookie-parser");
 
 initializePassport(passport);
 
@@ -16,12 +17,14 @@ require('dotenv').config()
 const port=process.env.PORT || 3001;
 
 app.set('view engine',"ejs");
+app.use(cookieParser());
 app.use(express.urlencoded({extended: false}));
 app.use(
     session({
       secret: process.env.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false
+      resave: true,
+      save:true,
+      saveUninitialized: true
     })
 );
 app.use(flash());
@@ -35,8 +38,11 @@ app.get("/",checkIndexAuthenticated,(req,res) =>{
 })
 
 app.get("/user/dashboard",(req,res) =>{
+    req.session.user=req.user;
+    req.session.save();
     let arr=[];
-    arr['username']=req.user.username;
+    arr['username']=req.session.user.username;
+    arr['userid']=req.user.userid;
     res.render('user/dashboard',{arr});
 })
 
@@ -51,18 +57,16 @@ app.get("/user/usersignup", (req,res) =>{
 app.get("/userlogout", (req, res) => {
     req.logout(req.user, err => {
       if(err) return next(err);
+      req.session.destroy();
       res.redirect("/user/userlogin");
     });
 });
-// app.get("/sendMail",sendMail());
 
 
 
 
 //POST METHODS
-
 app.post("/user/register",async (req,res) =>{
-    //insert the values
     let {username,usernid,useremail,userphone,userpassword,userotp,uservarcode} = req.body;
     let error=[];
     if(userotp!=uservarcode){
@@ -136,6 +140,52 @@ app.post("/user/userlogin",passport.authenticate("local",{
     failureFlash:true
 }));
 
+app.post("/user/bookticket",async (req,res) =>{
+
+    let {from,to,journeydate} = req.body;
+
+    console.log(from,to,journeydate);
+
+    let arr=[];
+    arr['username']=req.session.user.username;
+
+    pool.query(
+        `SELECT * FROM trains WHERE departure = $1 AND destination = $2 AND departuredate = $3 and seats>0`,
+        [from, to, journeydate],
+        (err, results) => {
+          if (err) {
+            throw err;
+          }
+          console.log("database connected");
+          console.log(results.rows);
+      
+          if (results.rows.length > 0) {
+            console.log(results.rows.length);
+            req.session.traininfo=results;
+            res.render("user/bookticket", {results,arr});
+          } 
+          else {
+            let error = [];
+            error.push({ message: "Sorry, no trains available" });
+            res.render("user/dashboard", { error, arr});
+          }
+        }
+      );
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+//API
 function checkIndexAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return res.redirect("/user/dashboard");
@@ -150,10 +200,10 @@ function checkAuthenticated(req, res, next) {
 }
   
 function checkNotAuthenticated(req, res, next) {
-if (req.isAuthenticated()) {
-    return next();
-}
-res.redirect("user/userlogin");
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("user/userlogin");
 }
 
 
