@@ -16,33 +16,6 @@
 <body>
     <%-include('../partials/nav') %>
 
-    <%if(messages.error){
-        %>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Sorry!</strong> <%=messages.error%>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <%
-        delete error;
-    } %>
-
-    <%if(typeof no_err != 'undefined'){
-        no_err.forEach(no_err => {
-            %>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Success!</strong> <%=no_err.message%>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <%
-        }) %>
-        <%
-        delete no_err;
-    } %>
-
     <div class="container my-4">
         <h1 class="text-center">Log in to SMetro</h1>
         <form action="/user/userlogin" method="post">

@@ -22,6 +22,7 @@ const sendMail=async(useremail,otp)=>{
         text: "Your otp varification code is "+ otp, 
         // html: "<b>Welcome</b>",
     });
+    console.log("OTP: "+otp);
     // res.json(info);
 };
 
