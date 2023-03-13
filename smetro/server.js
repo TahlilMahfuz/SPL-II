@@ -32,6 +32,7 @@ app.use(
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static('public'));
 
 
 
@@ -70,6 +71,9 @@ app.get("/userlogout", (req, res) => {
     });
 });
 
+app.get("/user/showqr",(req,res) =>{
+    res.redirect('user/showqr');
+})
 
 
 
@@ -81,35 +85,6 @@ app.get("/userlogout", (req, res) => {
 
 
 //POST METHODS
-app.post("/user/register",async (req,res) =>{
-    let {username,usernid,useremail,userphone,userpassword,userotp,uservarcode} = req.body;
-    let error=[];
-    if(userotp!=uservarcode){
-        error.push({message:"Invalid varification code"});
-        res.render("user/register",{error});
-    }
-    else{
-        let hash=await bcrypt.hash(userpassword,10);
-        console.log(hash);
-        pool.query(
-            `INSERT INTO users (username,usernid,useremail,userphone,userpassword)
-                VALUES ($1, $2, $3, $4, $5)
-                RETURNING username,usernid,useremail,userphone,userpassword`,
-            [username,usernid,useremail,userphone,hash],
-            (err, results) => {
-            if (err) {
-                throw err;
-            }
-            console.log(results.rows);
-            console.log("Data inserted");
-            req.flash("success_msg", "You are now registered. Please log in");
-            }
-        );
-        let no_err=[];
-        no_err.push({message:"Account created. You can log in now"});
-        res.render("user/userlogin",{no_err});
-    }
-})
 
 app.post("/user/usersignup",async (req,res) =>{
 
@@ -143,6 +118,37 @@ app.post("/user/usersignup",async (req,res) =>{
                     sendMail(useremail,userotp);
                     res.render('user/register',{username,usernid,useremail,userphone,userpassword,userotp});
                 }
+            }
+        );
+    }
+})
+
+app.post("/user/register",async (req,res) =>{
+    let {username,usernid,useremail,userphone,userpassword,userotp,uservarcode} = req.body;
+    let error=[];
+    if(userotp!=uservarcode){
+        error.push({message:"Invalid varification code"});
+        res.render("user/register",{error});
+    }
+    else{
+        let hash=await bcrypt.hash(userpassword,10);
+        console.log(hash);
+        pool.query(
+            `INSERT INTO users (username,usernid,useremail,userphone,userpassword)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING username,usernid,useremail,userphone,userpassword`,
+            [username,usernid,useremail,userphone,hash],
+            (err, results) => {
+            if (err) {
+                throw err;
+            }
+                console.log(results.rows);
+                console.log("Data inserted");
+                req.flash("success_msg", "You are now registered. Please log in");
+
+                let no_err=[];
+                no_err.push({message:"Account created. You can log in now"});
+                res.render("user/userlogin",{no_err});
             }
         );
     }
@@ -214,7 +220,7 @@ app.post("/user/confirmbook",async (req,res) =>{
 
             //Generate QR code
             let stjson=JSON.stringify(reservationId);
-            qr.toFile("qr.png",stjson,function(err){
+            qr.toFile("./public/img/qr.png",stjson,function(err){
                 if(err)
                     throw err;
             });
@@ -227,8 +233,9 @@ app.post("/user/confirmbook",async (req,res) =>{
                 }
             });
 
-
-            res.render("user/dashboard");
+            let no_err=[];
+            no_err.push({message:"Ticket Confirmed."});
+            res.render("user/showqr");
         }
     );
 })
