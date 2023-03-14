@@ -247,8 +247,8 @@ app.post("/user/confirmbook",async (req,res) =>{
             //Generate QR code
             let stjson=JSON.stringify(reservationId);
             qr.toFile("./public/img/qr.png",stjson,{
-                width: 500,
-                height: 500
+                width: 200,
+                height: 200
             },function(err){
                 if(err)
                     throw err;
@@ -315,7 +315,21 @@ app.post("/user/showqr",(req,res) =>{
         if(err)
             throw err;
     });
-    res.render('user/showqr',{reservationid});
+    pool.query(
+        `SELECT *
+        FROM reservation natural join trains natural join users
+        WHERE reservationid =$1 and avaiability=1
+        order by reserve_time desc`,[reservationid],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            else{  
+                res.render('user/showqr',{results});
+            }
+        }
+    );
+    
 })
 
 
