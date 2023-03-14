@@ -14,12 +14,53 @@
 </head>
 
 <body> 
-    <%-include('../partials/navlogged') %> 
-    <h1 class="text-center">Here is your QR code.</h1><br><br>
-    <h3 class="text-center">Reservation ID: <%=reservationid%></h3><br>
-    <div class="text-center">
-        <img src="../img/qr.png" class="mx-auto" height="500" width="500" alt="Responsive image">
+    <%-include('../partials/navlogged') %>
+    <div class="jumbotron">
+        <div class="card shadow mb-4 my-2 mx-auto" style="max-width: 700px;">
+            <div class="card-header py-3">
+                <h3 class="text-center">Welcome to SMetro. Here is your ticket.</h3><br><br>
+                <div class="row">
+                    <div class="col-4"><h4>Reservation ID:</h4></div>
+                    <div class="col-8"><h4><%=results.rows[0].reservationid%></h4></div>
+                </div>
+                <div class="row">
+                    <div class="col-4"><h4>Passenger Name:</h4></div>
+                    <div class="col-8"><h4><%=results.rows[0].username%></h4></div>
+                </div>
+                <div class="row">
+                    <div class="col-4"><h4>Train Name:</h4></div>
+                    <div class="col-8"><h4><%=results.rows[0].trainname%></h4></div>
+                </div>
+                <div class="row">
+                    <div class="col-4"><h4>Departure Station:</h4></div>
+                    <div class="col-8"><h4><%=results.rows[0].departure%></h4></div>
+                </div>
+                <div class="row">
+                    <div class="col-4"><h4>Destination Station:</h4></div>
+                    <div class="col-8"><h4><%=results.rows[0].destination%></h4></div>
+                </div>
+                <div class="row">
+                    <div class="col-4"><h4>Departure Time:</h4></div>
+                    <div class="col-8"><h4><%=results.rows[0].departuretime%></h4></div>
+                </div>
+                <div class="row">
+                    <div class="col-4"><h4>Arrival Time:</h4></div>
+                    <div class="col-8"><h4><%=results.rows[0].arrivaltime%></h4></div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <img src="../img/qr.png" class="mx-auto" height="500" width="500" alt="Responsive image">
+                </div>
+                <button class="btn btn-primary btn-lg float-right" onclick="window.print()">Print</button>
+            </div>
+        </div>
     </div>
+    
+    
+    
+    
+
     
 
     <!-- Optional JavaScript -->
