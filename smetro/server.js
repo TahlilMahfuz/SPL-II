@@ -222,7 +222,10 @@ app.post("/user/confirmbook",async (req,res) =>{
 
             //Generate QR code
             let stjson=JSON.stringify(reservationId);
-            qr.toFile("./public/img/qr.png",stjson,function(err){
+            qr.toFile("./public/img/qr.png",stjson,{
+                width: 500,
+                height: 500
+            },function(err){
                 if(err)
                     throw err;
             });
@@ -232,6 +235,21 @@ app.post("/user/confirmbook",async (req,res) =>{
                 }
                 else{
                     console.log(code);
+                    pool.query(
+                        `update reservation
+                        set qr_code=$1
+                        where reservationid=$2
+                        RETURNING reservationid`,
+                        [code,reservationId],
+                        async (err, results) => {
+                                if (err) {
+                                    throw err;
+                                }
+                                else{
+                                    console.log("qr_code inserted");
+                                }
+                            }
+                        );
                 }
             });
 
