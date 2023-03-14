@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-const sendMail=async(useremail,otp)=>{
+const sendMail=async(useremail,otp,subject,message)=>{
     let testAccount = await nodemailer.createTestAccount();
 
     //connect with smtp
@@ -18,8 +18,8 @@ const sendMail=async(useremail,otp)=>{
     let info = await transporter.sendMail({
         from: '"SMetro 👻" <smetro@gmail.com>',
         to: useremail,
-        subject: "Verify your account", 
-        text: "Your otp varification code is "+ otp, 
+        subject: subject, 
+        text: message+ otp, 
         // html: "<b>Welcome</b>",
     });
     console.log("OTP: "+otp);

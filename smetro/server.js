@@ -115,7 +115,9 @@ app.post("/user/usersignup",async (req,res) =>{
                     res.render("user/usersignup",{error});
                 }
                 else{
-                    sendMail(useremail,userotp);
+                    let message="Your otp varification code is ";
+                    let subject="Verify your account";
+                    sendMail(useremail,userotp,subject,message);
                     res.render('user/register',{username,usernid,useremail,userphone,userpassword,userotp});
                 }
             }
