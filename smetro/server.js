@@ -108,6 +108,7 @@ app.get("/user/tickethistory",(req,res) =>{
 
 
 
+
 //POST METHODS
 
 app.post("/user/usersignup",async (req,res) =>{
@@ -331,6 +332,128 @@ app.post("/user/showqr",(req,res) =>{
     );
     
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Admin Get Methods
+app.get("/admin/adminlogin",checkAuthenticated,(req,res) =>{
+    res.render('admin/adminlogin');
+})
+
+app.get("/admin/adminsignup", (req,res) =>{
+    res.render('admin/adminsignup');
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Admin Post Methods
+app.post("/admin/adminsignup",async (req,res) =>{
+
+    let {masterkey,adminname,adminnid,adminemail,adminphone,adminpassword,cadminpassword} = req.body;
+
+    console.log(masterkey,adminname,adminnid,adminemail,adminphone,adminpassword,cadminpassword);
+    
+    let error=[];
+
+    if(adminpassword!=cadminpassword){
+        error.push({message: "Passwords do not match"});
+        res.render('admin/adminsignup',{error});
+    }
+    else if(masterkey!="1234"){
+        error.push({message: "Incorrect masterkey.Please contact authority"});
+        res.render('admin/adminsignup',{error});
+    }
+    else{
+        const adminotp = Math.floor(1000 + Math.random() * 9000);
+
+        pool.query(
+            `select * from admins where adminemail=$1`,[adminemail],
+            (err,results)=>{
+                if(err){
+                    throw err;
+                }
+                console.log("database connected");
+                console.log(results.rows);
+
+                if(results.rows.length>0){
+                    error.push({message: "Email already exists"});
+                    res.render("admin/adminsignup",{error});
+                }
+                else{
+                    let message="Your otp varification code is ";
+                    let subject="Verify your account";
+                    sendMail(adminemail,adminotp,subject,message);
+                    res.render('admin/adminregister',{adminname,adminnid,adminemail,adminphone,adminpassword,adminotp});
+                }
+            }
+        );
+    }
+})
+
+app.post("/admin/adminregister",async (req,res) =>{
+    let {adminname,adminnid,adminemail,adminphone,adminpassword,adminotp,adminvarcode} = req.body;
+    let error=[];
+    if(adminotp!=adminvarcode){
+        error.push({message:"Invalid varification code"});
+        res.render("admin/adminregister",{error});
+    }
+    else{
+        let hash=await bcrypt.hash(adminpassword,10);
+        console.log(hash);
+        pool.query(
+            `INSERT INTO admins (adminname,adminnid,adminemail,adminphone,adminpassword)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING adminname,adminnid,adminemail,adminphone,adminpassword`,
+            [adminname,adminnid,adminemail,adminphone,hash],
+            (err, results) => {
+            if (err) {
+                throw err;
+            }
+                console.log(results.rows);
+                console.log("Data inserted");
+                req.flash("success_msg", "You are now registered admin. Please log in");
+
+                let no_err=[];
+                no_err.push({message:"Account created. You can log in now as an admin"});
+                res.render("admin/adminlogin",{no_err});
+            }
+        );
+    }
+})
+
+
+app.post("/admin/adminlogin",passport.authenticate("local",{
+    successRedirect:"admindashboard",
+    failureRedirect:"adminlogin",
+    failureFlash:true
+}));
+
+
+
+
+
 
 
 
