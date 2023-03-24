@@ -444,11 +444,52 @@ app.post("/admin/adminregister",async (req,res) =>{
 })
 
 
-app.post("/admin/adminlogin",passport.authenticate("local",{
-    successRedirect:"admindashboard",
-    failureRedirect:"adminlogin",
-    failureFlash:true
-}));
+
+app.post("/admin/adminlogin",async (req,res) =>{
+    let {adminemail,adminpassword} = req.body;
+    console.log("admin email: "+adminemail);
+    console.log("admin password: "+adminpassword);
+
+    let error=[];
+    pool.query(
+        `select * from admins where adminemail=$1`,
+        [adminemail],
+        (err, results) => {
+          if (err) {
+            throw err;
+          }
+          console.log(results.rows);
+  
+          if (results.rows.length > 0) {
+            const admin = results.rows[0];
+  
+            bcrypt.compare(adminpassword, admin.adminpassword, (err, isMatch) => {
+              if (err) {
+                console.log(err);
+              }
+              if (isMatch) {
+                req.session.admin=results;
+                res.render("admin/admindashboard");
+              } 
+              else {
+                //password is incorrect
+                error.push({message:"Incorrect Passowrd"});
+                res.render("admin/adminlogin",{error});
+              }
+            });
+          } 
+          else {
+            // No user
+            console.log("no user");
+            error.push({message:"No admins found with this email"});
+            res.render("admin/adminlogin",{error});
+
+          }
+        }
+      );
+})
+
+
 
 
 
