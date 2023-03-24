@@ -355,6 +355,12 @@ app.get("/admin/adminlogin",checkAuthenticated,(req,res) =>{
 app.get("/admin/adminsignup", (req,res) =>{
     res.render('admin/adminsignup');
 })
+app.get("/admin/admindashboard", (req,res) =>{
+    res.render('admin/admindashboard');
+})
+app.get("/admin/addtrain", (req,res) =>{
+    res.render('admin/addtrain');
+})
 
 
 
@@ -487,6 +493,70 @@ app.post("/admin/adminlogin",async (req,res) =>{
           }
         }
       );
+})
+
+app.post("/admin/addroute",async (req,res) =>{
+    let {departure,destination,amount} = req.body;
+    console.log(departure+" " +destination+" " +amount);
+
+    let error=[],no_err=[];
+
+    pool.query(
+        `select * from fares where departure=$1 and destination=$2`,
+        [departure,destination],
+        (err, results) => {
+          if (err) {
+            throw err;
+          }
+          console.log(results.rows);
+          console.log(results.rows.length);
+  
+          if (results.rows.length > 0) {
+            error.push({message:"Route already exists"});
+            res.render("admin/admindashboard",{error});
+          }
+          else{
+            pool.query(
+                `INSERT INTO trains (,tdeparture,destination,amount)
+                    VALUES ($1, $2, $3)
+                    RETURNING fareid,departure,destination,amount`,
+                [departure,destination,amount],
+                (err, results) => {
+                if (err) {
+                    throw err;
+                }
+                    // console.log(results.rows);
+                    
+                    no_err.push({message:"Fare Inserted"});
+                    res.render("admin/admindashboard",{no_err});
+                }
+            );
+          }
+        }
+      );
+})
+
+
+app.post("/admin/addtrain",async (req,res) =>{
+    let {trainname,departure,destination,seats,journeydate,departuretime,arrivaltime} = req.body;
+    console.log(trainname,departure,destination,seats,journeydate,departuretime,arrivaltime);
+
+    pool.query(
+        `INSERT INTO trains (trainname,departure,destination,seats,departuredate,departuretime,arrivaltime)
+            VALUES ($1, $2, $3,$4,$5,$6,$7)
+            RETURNING trainname,departure,destination,seats,departuredate,departuretime,arrivaltime`,
+        [trainname,departure,destination,seats,journeydate,departuretime,arrivaltime],
+        (err, results) => {
+        if (err) {
+            throw err;
+        }
+            console.log(results.rows);
+        
+            let no_err=[];
+            no_err.push({message:"Train Info Inserted"});
+            res.render("admin/admindashboard",{no_err});
+        }
+    );
 })
 
 

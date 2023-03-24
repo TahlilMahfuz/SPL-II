@@ -21,28 +21,48 @@
             <a href="../admin/admindashboard"><button type="button" class="btn btn-secondary my-2">Add a route and fare</button></a>
             <a href="../admin/addtrain"><button type="button" class="btn btn-secondary my-2">Add a train</button></a>
             <h1 class="text-center">Add route fare</h1>
-            <form action="/admin/addroute" method="post">
+            <form action="/admin/addtrain" method="post">
     
                 <div class="form-row">
                     <div class="col">
-                        <label for="departure">From:</label>
+                        <label for="trainname">Train Name</label>
+                        <input type="text" maxlength="20" class="form-control" id="trainname" name="trainname" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <label for="departure">Departure</label>
                         <input type="text" maxlength="20" class="form-control" id="departure" name="departure" required>
                     </div>
                     <div class="col">
-                        <label for="destination">To:</label>
+                        <label for="destination">destination</label>
                         <input type="text" maxlength="20" class="form-control" id="destination" name="destination" required>
                     </div>
                 </div>
-                  <br>
-                  <div class="form-row">
-                      <div class="col">
-                        <label for="amount">Amount</label>
-                        <input type="text" class="form-control" id="amount" name="amount" required>
-                      </div>
-                  </div>
-                  <br>
+                <br>
+                <div class="form-row">
+                    <div class="form-row">
+                        <div class="col">
+                          <label for="journeydate">Date</label>
+                          <input type="date" class="form-control" id="journeydate" name="journeydate" required>
+                        </div>
+                        <div class="col">
+                          <label for="departuretime">Departure Time</label>
+                          <input type="datetime-local" class="form-control" id="departuretime" name="departuretime" required>
+                        </div>
+                        <div class="col">
+                          <label for="arrivaltime">Arrival Time</label>
+                          <input type="datetime-local" class="form-control" id="arrivaltime" name="arrivaltime" required>
+                        </div>
+                        <div class="col">
+                          <label for="seats">Seats</label>
+                          <input type="number" class="form-control" id="seats" name="seats" required>
+                        </div>
+                    </div>
+                </div>
+                <br>
         
-                <button type="submit" class="btn btn-success">Add route fare</button><br><br>
+                <button type="submit" class="btn btn-success">Add train information</button><br><br>
             </form>
         </div>
     </div>
