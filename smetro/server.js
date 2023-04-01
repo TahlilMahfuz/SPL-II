@@ -274,12 +274,11 @@ app.post("/user/confirmbook",async (req,res) =>{
             if (err) {
                 throw err;
             }
-            console.log("database connected");
-            console.log(results);
-
+            
+            
             const reservationId = results.rows[0].reservationid;
             console.log("RID: "+reservationId);
-
+            
             //Generate QR code
             let stjson=JSON.stringify(reservationId);
             qr.toFile("./public/img/qr.png",stjson,{
@@ -287,7 +286,7 @@ app.post("/user/confirmbook",async (req,res) =>{
                 height: 200
             },function(err){
                 if(err)
-                    throw err;
+                throw err;
             });
             qr.toString(stjson,{type:"terminal"},function (err,code) {
                 if(err){
@@ -302,18 +301,54 @@ app.post("/user/confirmbook",async (req,res) =>{
                         RETURNING reservationid`,
                         [code,reservationId],
                         async (err, results) => {
-                                if (err) {
-                                    throw err;
-                                }
-                                else{
-                                    console.log("qr_code inserted");
-                                }
+                            if (err) {
+                                throw err;
                             }
-                        );
+                            else{
+                                console.log("qr_code inserted");
+                            }
+                        }
+                    );
                 }
-            });
+             });
+                
+            //Update train table to deduct a seat
+            pool.query(
+                `update trains set seats=seats-1
+                where trainid=$1`,[trainid],
+                (err,results)=>{
+                    if(err){
+                        throw err;
+                    }
+                }
+            );
 
+            //Update User account that deducts the fare of the train
             let uid=req.session.user.userid;
+            pool.query(
+                `select amount from trains natural join fares where trainid=$1`,[trainid],
+                (err,results)=>{
+                    if(err){
+                        throw err;
+                    }
+                    console.log("Got amount: ");
+                    let fare = results.rows[0].amount;
+                    console.log(fare);
+
+                    pool.query(
+                        `update users set userbalance=userbalance-$1 where userid=$2`,[fare,uid],
+                        (err,results)=>{
+                            if(err){
+                                throw err;
+                            }
+                            console.log("User update completed");
+                        }
+                    );
+                }
+            );
+
+
+
             let no_err=[];
 
             pool.query(
