@@ -27,11 +27,21 @@
             <div class="form-row">
                 <div class="col">
                     <label for="from">From:</label>
-                    <input type="text" maxlength="20" class="form-control" id="from" name="from" required>
+                    <select type="text" maxlength="20" class="form-control" id="from" name="from" required>
+                        <option value="">Choose..</option>
+                        <% for (const rows of results) { %>
+                          <option value="<%= rows.departure %>"><%= rows.departure %></option>
+                        <% } %>
+                    </select>
                 </div>
                 <div class="col">
                     <label for="to">To:</label>
-                    <input type="text" maxlength="20" class="form-control" id="to" name="to" required>
+                    <select type="text" maxlength="20" class="form-control" id="to" name="to" required>
+                        <option value="">Choose..</option>
+                        <% for (const rows of results) { %>
+                          <option value="<%= rows.departure %>"><%= rows.departure %></option>
+                        <% } %>
+                    </select>
                 </div>
               </div>
               <br>

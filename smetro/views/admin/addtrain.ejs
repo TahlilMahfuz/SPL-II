@@ -18,25 +18,35 @@
 
     <div class="container my-4">
         <div class="jumbotron">
-            <a href="../admin/admindashboard"><button type="button" class="btn btn-secondary my-2">Add a route and fare</button></a>
-            <a href="../admin/addtrain"><button type="button" class="btn btn-secondary my-2">Add a train</button></a>
-            <h1 class="text-center">Add route fare</h1>
+            <a href="/admin/admindashboard"><button type="button" class="btn btn-secondary my-2">Add a route and fare</button></a>
+            <a href="/admin/addtrain"><button type="button" class="btn btn-secondary my-2">Add a train</button></a>
+            <h1 class="text-center">Add a train</h1>
             <form action="/admin/addtrain" method="post">
     
                 <div class="form-row">
                     <div class="col">
                         <label for="trainname">Train Name</label>
-                        <input type="text" maxlength="20" class="form-control" id="trainname" name="trainname" required>
+                        <input type="text" maxlength="100" class="form-control" id="trainname" name="trainname" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col">
-                        <label for="departure">Departure</label>
-                        <input type="text" maxlength="20" class="form-control" id="departure" name="departure" required>
-                    </div>
+                        <label for="departure">Departure</label><br>
+                        <select type="text" maxlength="100" class="form-control" id="departure" name="departure" required>
+                            <option value="">Choose..</option>
+                            <% for (const rows of results) { %>
+                              <option value="<%= rows.departure %>"><%= rows.departure %></option>
+                            <% } %>
+                        </select>                          
+                        </div>
                     <div class="col">
                         <label for="destination">destination</label>
-                        <input type="text" maxlength="20" class="form-control" id="destination" name="destination" required>
+                        <select type="text" maxlength="100" class="form-control" id="destination" name="destination" required>
+                            <option value="">Choose..</option>
+                            <% for (const rows of results) { %>     
+                              <option value="<%= rows.departure %>"><%= rows.departure %></option>
+                            <% } %>
+                        </select> 
                     </div>
                 </div>
                 <br>
