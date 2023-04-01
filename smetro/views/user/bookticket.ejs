@@ -38,6 +38,7 @@
                                 <th>Departure Time</th>
                                 <th>Arrival Time</th>
                                 <th>Available seats</th>
+                                <th>Fare</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -61,6 +62,9 @@
                                     </td>
                                     <td>
                                         <%= train.seats%>
+                                    </td>
+                                    <td>
+                                        <%= train.amount%> 
                                     </td>
                                     <td>
                                         <form action="/user/confirmbook" method="post">

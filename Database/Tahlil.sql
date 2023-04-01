@@ -42,6 +42,18 @@ create table trains(
     seats int
 );
 
+select * from trains;
+
+drop table fares;
+
+create table fares(
+    fareid serial primary key,
+    departure varchar(100),
+    destination varchar(100),
+    amount double precision
+);
+select * from fares;
+
 drop table reservation;
 
 CREATE TABLE reservation (
@@ -55,6 +67,20 @@ CREATE TABLE reservation (
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
 select * from reservation;
+
+
+drop table admins;
+
+create table admins(
+    adminid serial primary key,
+    adminname varchar(100),
+    adminNID varchar(100),
+    adminemail varchar(100),
+    adminphone varchar(100),
+    adminpassword varchar(300),
+    reg_date date not null default current_timestamp
+);
+select * from admins;
 
 
 
@@ -73,6 +99,11 @@ INSERT INTO trains (trainname,departure,destination,departuredate,departuretime,
                         VALUES ('MohakhaliExpress', 'mohakhali', 'mirpur',
                                 to_date('11-03-2023','dd-mm-yyyy'),
                                 TO_TIMESTAMP('11-03-2023 12:34:56', 'DD-MM-YYYY HH24:MI:SS'),
+                                TO_TIMESTAMP('11-03-2023 18:34:56', 'DD-MM-YYYY HH24:MI:SS'),100);
+INSERT INTO trains (trainname,departure,destination,departuredate,departuretime,arrivaltime,seats)
+                        VALUES ('MohakhaliExpress', 'mohakhali', 'mirpur',
+                                to_date('11-03-2023','dd-mm-yyyy'),
+                                TO_TIMESTAMP('2023-03-28 12:34:56', 'YYYY-MM-DD HH24:MI:SS'),
                                 TO_TIMESTAMP('11-03-2023 18:34:56', 'DD-MM-YYYY HH24:MI:SS'),100);
 select * from trains;
 
@@ -108,3 +139,7 @@ select * from trains where departure='mohakhali' and destination='uttara' and de
 SELECT *
 FROM reservation natural join trains natural join users
 WHERE userid =6 order by reserve_time desc;
+
+INSERT INTO trains (trainname,departure,destination,seats,departuredate,departuretime,arrivaltime)
+            VALUES ($1, $2, $3,$4,$5,$6,$7)
+            RETURNING trainname,departure,destination,seats,departuredate,departuretime,arrivaltime`,

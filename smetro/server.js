@@ -52,7 +52,19 @@ app.get("/user/dashboard",(req,res) =>{
     let arr=[];
     arr['username']=req.session.user.username;
     arr['userid']=req.user.userid;
-    res.render('user/dashboard',{arr});
+
+    pool.query(
+        `select distinct departure from fares`,
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            console.log(results);
+            const resultsArray = Array.from(results.rows);
+            res.render('user/dashboard',{results: resultsArray,arr});
+        }
+    );
+    
 })
 
 app.get("/user/userlogin",checkAuthenticated,(req,res) =>{
@@ -73,6 +85,7 @@ app.get("/userlogout", (req, res) => {
 
 app.get("/user/tickethistory",(req,res) =>{
     let uid=req.session.user.userid;
+    
     pool.query(
         `SELECT *
         FROM reservation natural join trains natural join users
@@ -91,7 +104,17 @@ app.get("/user/tickethistory",(req,res) =>{
             else{
                 let no_err=[];
                 no_err.push({message:"Sorry you have no previous tickets"});
-                res.render("user/dashboard",{no_err});
+                pool.query(
+                    `select distinct departure from fares`,
+                    (err,results)=>{
+                        if(err){
+                            throw err;
+                        }
+                        console.log(results);
+                        const resultsArray = Array.from(results.rows);
+                        res.render('user/dashboard',{results: resultsArray,no_err});
+                    }
+                );
             }
         }
     );
@@ -198,7 +221,8 @@ app.post("/user/bookticket",async (req,res) =>{
     arr['username']=req.session.user.username;
 
     pool.query(
-        `SELECT * FROM trains WHERE departure = $1 AND destination = $2 AND departuredate = $3 and seats>0`,
+        `SELECT * FROM trains natural join fares 
+        WHERE departure = $1 AND destination = $2 AND departuredate = $3 and seats>0`,
         [from, to, journeydate],
         (err, results) => {
           if (err) {
@@ -214,8 +238,19 @@ app.post("/user/bookticket",async (req,res) =>{
           } 
           else {
             let error = [];
-            error.push({ message: "Sorry, no trains available" });
-            res.render("user/dashboard", { error, arr});
+            pool.query(
+                `select distinct departure from fares`,
+                (err,results)=>{
+                    if(err){
+                        throw err;
+                    }
+                    console.log(results);
+                    const resultsArray = Array.from(results.rows);
+                    
+                    error.push({ message: "Sorry, no trains available" });
+                    res.render('user/dashboard',{results: resultsArray,arr,error});
+                }
+            );
           }
         }
     );
@@ -239,12 +274,11 @@ app.post("/user/confirmbook",async (req,res) =>{
             if (err) {
                 throw err;
             }
-            console.log("database connected");
-            console.log(results);
-
+            
+            
             const reservationId = results.rows[0].reservationid;
             console.log("RID: "+reservationId);
-
+            
             //Generate QR code
             let stjson=JSON.stringify(reservationId);
             qr.toFile("./public/img/qr.png",stjson,{
@@ -252,7 +286,7 @@ app.post("/user/confirmbook",async (req,res) =>{
                 height: 200
             },function(err){
                 if(err)
-                    throw err;
+                throw err;
             });
             qr.toString(stjson,{type:"terminal"},function (err,code) {
                 if(err){
@@ -267,18 +301,79 @@ app.post("/user/confirmbook",async (req,res) =>{
                         RETURNING reservationid`,
                         [code,reservationId],
                         async (err, results) => {
-                                if (err) {
-                                    throw err;
-                                }
-                                else{
-                                    console.log("qr_code inserted");
-                                }
+                            if (err) {
+                                throw err;
                             }
-                        );
+                            else{
+                                console.log("qr_code inserted");
+                            }
+                        }
+                    );
                 }
-            });
+             });
+                
+            //Update train table to deduct a seat
+            pool.query(
+                `update trains set seats=seats-1
+                where trainid=$1`,[trainid],
+                (err,results)=>{
+                    if(err){
+                        throw err;
+                    }
+                }
+            );
 
+            //Update User account that deducts the fare of the train
             let uid=req.session.user.userid;
+            pool.query(
+                `select amount from trains natural join fares where trainid=$1`,[trainid],
+                (err,results)=>{
+                    if(err){
+                        throw err;
+                    }
+                    console.log("Got amount: ");
+                    let fare = results.rows[0].amount;
+                    console.log(fare);
+
+                    pool.query(
+                        `select userbalance from users where userid=$1`,[uid],
+                        (err,results)=>{
+                            if(err){
+                                throw err;
+                            }
+                            let userbalanace=results.rows[0].userbalance;
+                            if(userbalanace<fare){
+                                let error=[];
+                                error.push({message:"Sorry!Not enough account balance.Please recharge your account."});
+                                pool.query(
+                                    `select distinct departure from fares`,
+                                    (err,results)=>{
+                                        if(err){
+                                            throw err;
+                                        }
+                                        console.log(results);
+                                        const resultsArray = Array.from(results.rows);
+                                        res.render('user/dashboard',{results: resultsArray,error});
+                                    }
+                                );
+                            } 
+                            else{
+                                pool.query(
+                                    `update users set userbalance=userbalance-$1 where userid=$2`,[fare,uid],
+                                    (err,results)=>{
+                                        if(err){
+                                            throw err;
+                                        }
+                                        console.log("User update completed");
+                                    }
+                                );
+                                console.log("User update completed");
+                            }
+                        }
+                    );
+                }
+            );
+
             let no_err=[];
 
             pool.query(
@@ -359,7 +454,17 @@ app.get("/admin/admindashboard", (req,res) =>{
     res.render('admin/admindashboard');
 })
 app.get("/admin/addtrain", (req,res) =>{
-    res.render('admin/addtrain');
+    pool.query(
+        `select distinct departure from fares`,
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            
+            const resultsArray = Array.from(results.rows);
+            res.render('admin/addtrain',{results: resultsArray});
+        }
+    );
 })
 
 
@@ -517,10 +622,21 @@ app.post("/admin/addroute",async (req,res) =>{
           }
           else{
             pool.query(
-                `INSERT INTO trains (,tdeparture,destination,amount)
+                `INSERT INTO fares (departure,destination,amount)
                     VALUES ($1, $2, $3)
                     RETURNING fareid,departure,destination,amount`,
                 [departure,destination,amount],
+                (err, results) => {
+                if (err) {
+                    throw err;
+                }
+                }
+            );
+            pool.query(
+                `INSERT INTO fares (departure,destination,amount)
+                    VALUES ($1, $2, $3)
+                    RETURNING fareid,departure,destination,amount`,
+                [destination,departure,amount],
                 (err, results) => {
                 if (err) {
                     throw err;
@@ -540,23 +656,51 @@ app.post("/admin/addroute",async (req,res) =>{
 app.post("/admin/addtrain",async (req,res) =>{
     let {trainname,departure,destination,seats,journeydate,departuretime,arrivaltime} = req.body;
     console.log(trainname,departure,destination,seats,journeydate,departuretime,arrivaltime);
-
-    pool.query(
-        `INSERT INTO trains (trainname,departure,destination,seats,departuredate,departuretime,arrivaltime)
-            VALUES ($1, $2, $3,$4,$5,$6,$7)
-            RETURNING trainname,departure,destination,seats,departuredate,departuretime,arrivaltime`,
-        [trainname,departure,destination,seats,journeydate,departuretime,arrivaltime],
-        (err, results) => {
-        if (err) {
-            throw err;
-        }
-            console.log(results.rows);
-        
-            let no_err=[];
-            no_err.push({message:"Train Info Inserted"});
-            res.render("admin/admindashboard",{no_err});
-        }
-    );
+    console.log(destination,departure);
+    
+    if(departure==destination){
+        let error=[];
+        error.push({message:"Departure and Destination should be different"});
+        pool.query(
+            `select distinct departure from fares`,
+            (err,results)=>{
+                if(err){
+                    throw err;
+                }
+                
+                const resultsArray = Array.from(results.rows);
+                
+                res.render('admin/addtrain',{results: resultsArray,error});
+            }
+        );
+    }
+    else{
+        pool.query(
+            `INSERT INTO trains (trainname,departure,destination,seats,departuredate,departuretime,arrivaltime)
+                VALUES ($1, $2, $3,$4,$5,$6,$7)
+                RETURNING trainname,departure,destination,seats,departuredate,departuretime,arrivaltime`,
+            [trainname,departure,destination,seats,journeydate,departuretime,arrivaltime],
+            (err, results) => {
+            if (err) {
+                throw err;
+            }
+                console.log(results.rows);
+            }
+        );
+        pool.query(
+            `select distinct departure from fares`,
+            (err,results)=>{
+                if(err){
+                    throw err;
+                }
+                
+                const resultsArray = Array.from(results.rows);
+                let no_err=[];
+                no_err.push({message:"Train Info Inserted"});
+                res.render('admin/addtrain',{results: resultsArray,no_err});
+            }
+        );
+    }
 })
 
 
