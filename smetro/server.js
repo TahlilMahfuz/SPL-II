@@ -336,18 +336,43 @@ app.post("/user/confirmbook",async (req,res) =>{
                     console.log(fare);
 
                     pool.query(
-                        `update users set userbalance=userbalance-$1 where userid=$2`,[fare,uid],
+                        `select userbalance from users where userid=$1`,[uid],
                         (err,results)=>{
                             if(err){
                                 throw err;
                             }
-                            console.log("User update completed");
+                            let userbalanace=results.rows[0].userbalance;
+                            if(userbalanace<fare){
+                                let error=[];
+                                error.push({message:"Sorry!Not enough account balance.Please recharge your account."});
+                                pool.query(
+                                    `select distinct departure from fares`,
+                                    (err,results)=>{
+                                        if(err){
+                                            throw err;
+                                        }
+                                        console.log(results);
+                                        const resultsArray = Array.from(results.rows);
+                                        res.render('user/dashboard',{results: resultsArray,error});
+                                    }
+                                );
+                            } 
+                            else{
+                                pool.query(
+                                    `update users set userbalance=userbalance-$1 where userid=$2`,[fare,uid],
+                                    (err,results)=>{
+                                        if(err){
+                                            throw err;
+                                        }
+                                        console.log("User update completed");
+                                    }
+                                );
+                                console.log("User update completed");
+                            }
                         }
                     );
                 }
             );
-
-
 
             let no_err=[];
 
