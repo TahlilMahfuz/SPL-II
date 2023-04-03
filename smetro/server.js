@@ -43,7 +43,8 @@ app.use(express.static('public'));
 
 //GET METHODS
 app.get("/",checkIndexAuthenticated,(req,res) =>{
-    res.render('index');
+    // res.render('index');
+    res.render('user/userlogin');
 })
 
 app.get("/user/dashboard",(req,res) =>{
@@ -71,9 +72,33 @@ app.get("/userlogout", (req, res) => {
     });
 });
 
-app.get("/user/showqr",(req,res) =>{
-    res.redirect('user/showqr');
+app.get("/user/tickethistory",(req,res) =>{
+    let uid=req.session.user.userid;
+    pool.query(
+        `SELECT *
+        FROM reservation natural join trains natural join users
+        WHERE userid =$1 and avaiability=1
+        order by reserve_time desc`,[uid],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            console.log("database connected");
+            console.log(results.rows);
+
+            if(results.rows.length>0){
+                res.render("user/tickethistory",{results});
+            }
+            else{
+                let no_err=[];
+                no_err.push({message:"Sorry you have no previous tickets"});
+                res.render("user/dashboard",{no_err});
+            }
+        }
+    );
 })
+
+
 
 
 
@@ -223,8 +248,8 @@ app.post("/user/confirmbook",async (req,res) =>{
             //Generate QR code
             let stjson=JSON.stringify(reservationId);
             qr.toFile("./public/img/qr.png",stjson,{
-                width: 500,
-                height: 500
+                width: 200,
+                height: 200
             },function(err){
                 if(err)
                     throw err;
@@ -253,13 +278,60 @@ app.post("/user/confirmbook",async (req,res) =>{
                 }
             });
 
+            let uid=req.session.user.userid;
             let no_err=[];
-            no_err.push({message:"Ticket Confirmed."});
-            res.render("user/showqr");
+
+            pool.query(
+                `SELECT *
+                FROM reservation natural join trains natural join users
+                WHERE userid =$1 and avaiability=1
+                order by reserve_time desc`,[uid],
+                (err,results)=>{
+                    if(err){
+                        throw err;
+                    }
+                    console.log("database connected");
+                    console.log(results.rows);
+
+                    if(results.rows.length>0){
+                        no_err.push({message:"Ticket Confirmed."});
+                        res.render("user/tickethistory",{results});
+                    }
+                    else{
+                        no_err.push({message:"Sorry you have no previous tickets"});
+                        res.render("user/dashboard",{no_err});
+                    }
+                }
+            );
         }
     );
 })
-
+app.post("/user/showqr",(req,res) =>{
+    let {reservationid}=req.body;
+    let stjson=JSON.stringify(reservationid);
+    qr.toFile("./public/img/qr.png",stjson,{
+        width: 500,
+        height: 500
+    },function(err){
+        if(err)
+            throw err;
+    });
+    pool.query(
+        `SELECT *
+        FROM reservation natural join trains natural join users
+        WHERE reservationid =$1 and avaiability=1
+        order by reserve_time desc`,[reservationid],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            else{  
+                res.render('user/showqr',{results});
+            }
+        }
+    );
+    
+})
 
 
 

@@ -1,89 +1,390 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Bootstrap Navbar with Inline Login Form in Dropdown</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            color: #999;
+            background: #f3f3f3;
+            font-family: 'Roboto', sans-serif;
+        }
+        .form-control {
+            border-color: #eee;
+            min-height: 41px;
+            box-shadow: none !important;
+        }
+        .form-control:focus {
+            border-color: #5cd3b4;
+        }
+        .form-control, .btn {
+            border-radius: 3px;
+        }
+        .signup-form {
+            width: 500px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        .signup-form h2 {
+            color: #333;
+            margin: 0 0 30px 0;
+            display: inline-block;
+            padding: 0 30px 10px 0;
+            border-bottom: 3px solid #5cd3b4;
+        }
+        .signup-form form {
+            color: #999;
+            border-radius: 3px;
+            margin-bottom: 15px;
+            background: #fff;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+        }
+        .signup-form .form-group row {
+            margin-bottom: 20px;
+        }
+        .signup-form label {
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 2;
+        }
+        .signup-form input[type="checkbox"] {
+            position: relative;
+            top: 1px;
+        }
+        .signup-form .btn {
+            font-size: 16px;
+            font-weight: bold;
+            background: #5cd3b4;
+            border: none;
+            margin-top: 20px;
+            min-width: 140px;
+        }
+        .signup-form .btn:hover, .signup-form .btn:focus {
+            background: #41cba9;
+            outline: none !important;
+        }
+        .signup-form a {
+            color: #5cd3b4;
+            text-decoration: underline;
+        }
+        .signup-form a:hover {
+            text-decoration: none;
+        }
+        .signup-form form a {
+            color: #5cd3b4;
+            text-decoration: none;
+        }
+        .signup-form form a:hover {
+            text-decoration: underline;
+        }
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>SignUp</title>
+
+
+
+
+
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+        .form-control {
+            box-shadow: none;
+            border-radius: 4px;
+            border-color: #dfe3e8;
+        }
+        .navbar {
+            background: #fff;
+            padding-left: 16px;
+            padding-right: 16px;
+            border-bottom: 1px solid #dfe3e8;
+            border-radius: 0;
+        }
+        .navbar .navbar-brand {
+            font-size: 20px;
+            padding-left: 0;
+            padding-right: 50px;
+        }
+        .navbar .navbar-brand b {
+            color: #29c68c;
+        }
+        .navbar a, .navbar a:active {
+            color: #999;
+            background: transparent;
+        }
+        .navbar .navbar-nav a:hover, .navbar .navbar-nav a:focus {
+            color: #29c68c !important;
+        }
+        .navbar .navbar-nav > a.active, .navbar .navbar-nav.show > a {
+            color: #26bb84 !important;
+            background: transparent !important;
+        }
+        .navbar .form-inline .input-group-text {
+            box-shadow: none;
+            border-radius: 2px 0 0 2px;
+            background: #f5f5f5;
+            border-color: #dfe3e8;
+            font-size: 16px;
+        }
+        .navbar .form-inline i {
+            font-size: 16px;
+        }
+        .navbar .form-inline .btn {
+            border-radius: 2px;
+            color: #fff;
+            border-color: #29c68c;
+            background: #29c68c;
+            outline: none;
+        }
+        .navbar .form-inline .btn:hover, .navbar .form-inline .btn:focus {
+            border-color: #26bb84;
+            background: #26bb84;
+        }
+        .navbar .search-form {
+            display: inline-block;
+        }
+        .navbar .search-form .btn {
+            margin-left: 4px;
+        }
+        .navbar .search-form .form-control {
+            border-radius: 2px;
+        }
+        .navbar .login-form .input-group {
+            margin-right: 4px;
+            float: left;
+        }
+        .navbar .login-form .form-control {
+            max-width: 158px;
+            border-radius: 0 2px 2px 0;
+        }
+        .navbar .navbar-right .dropdown-toggle::after {
+            display: none;
+        }
+        .navbar .dropdown-menu {
+            font-size: 14px;
+            border-radius: 1px;
+            border-color: #e5e5e5;
+            box-shadow: 0 2px 8px rgba(0,0,0,.05);
+        }
+        .navbar .dropdown-menu a {
+            padding: 6px 20px;
+        }
+        .navbar .login-dropdown .dropdown-menu {
+            width: 505px;
+            padding: 20px;
+            left: auto;
+            right: 0;
+        }
+        .navbar .login-dropdown .dropdown-toggle::after {
+            display: none;
+        }
+        @media (min-width: 1200px){
+            .search-form .input-group {
+                width: 300px;
+                margin-left: 30px;
+            }
+        }
+        @media (max-width: 768px){
+            .navbar .dropdown-menu {
+                width: 100%;
+                background: transparent;
+                padding: 10px 20px;
+            }
+            .navbar .input-group {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            .navbar .input-group .form-control {
+                max-width: none;
+            }
+            .navbar .login-form .btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <%-include('../partials/nav') %>
-    <%if(typeof error != 'undefined'){
-        error.forEach(error => {
-            %>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>Sorry!</strong> <%=error.message%>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <%
-        }) %>
-        <%
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a href="#" class="navbar-brand">S<b>Metro</b></a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- Collection of nav links, forms, and other content for toggling -->
+    <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
+        <div class="navbar-nav">
+            <a href="#" class="nav-item nav-link">Home</a>
+            <a href="#" class="nav-item nav-link">About</a>
+<!--            <div class="nav-item dropdown">-->
+<!--                <a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle">Services</a>-->
+<!--                <div class="dropdown-menu">-->
+<!--                    <a href="#" class="dropdown-item">Web Design</a>-->
+<!--                    <a href="#" class="dropdown-item">Web Development</a>-->
+<!--                    <a href="#" class="dropdown-item">Graphic Design</a>-->
+<!--                    <a href="#" class="dropdown-item">Digital Marketing</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <a href="#" class="nav-item nav-link active">Pricing</a>-->
+<!--            <a href="#" class="nav-item nav-link">Blog</a>-->
+            <a href="#" class="nav-item nav-link">Contact</a>
+        </div>
+        <!--        <form class="navbar-form form-inline search-form">-->
+        <!--            <div class="input-group">-->
+        <!--                <input type="text" class="form-control" placeholder="Search...">-->
+        <!--                <span class="input-group-btn">-->
+        <!--					<button type="button" class="btn btn-default"><i class="fa fa-search"></i></button>-->
+        <!--				</span>-->
+        <!--            </div>-->
+        <!--        </form>-->
+<!--        <div class="navbar-nav ml-auto">-->
+<!--            <div class="nav-item">-->
+<!--                <a href="#" class="nav-item nav-link"><i class="fa fa-user-o"></i> Sign Up</a>-->
+<!--            </div>-->
+<!--        </div>-->
+
+    </div>
+</nav>
+<%if(typeof error != 'undefined'){
+error.forEach(error => {
+%>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Sorry!</strong> <%=error.message%>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<%
+}) %>
+<%
+    delete error;
+} %>
+
+<%if(typeof no_err != 'undefined'){
+no_err.forEach(no_err => {
+%>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Success!</strong> <%=no_err.message%>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<%
+}) %>
+<%
+    delete no_err;
+} %>
+
+
+
+<div class="signup-form">
+    <form action="/user/register" method="post" class="form-horizontal">
+        <div class="row">
+            <div class="col-8 offset-4">
+                <h2>Confirmation</h2>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="uservarcode" class="col-form-label col-4">Verification Code</label>
+            <div class="col-8">
+                <input type="text" maxlength="20" id="userotp" class="form-control" name="uservarcode" required="required">
+            </div>
+        </div>
+        <div>
+            <p id="response"></p>
+        </div>
+        <input type="hidden" maxlength="20" class="form-control" id="username" name="username" value=<%=username%>
+        aria-describedby="emailHelp" placeholder="Not email" required>
+        <input type="hidden" maxlength="20" class="form-control" id="usernid" name="usernid" value=<%=usernid%>
+        aria-describedby="emailHelp" placeholder="" required>
+        <input type="hidden" maxlength="50" class="form-control" id="useremail" name="useremail" value=<%=useremail%>
+        aria-describedby="emailHelp" required>
+        <input type="hidden" class="form-control" id="phone" name="userphone" value=<%=userphone%>
+        maxlength="11" pattern="[0-9]{11}" placeholder="01XXXXXXXXX(Use only digits)" required>
+        <input type="hidden" maxlength="23" class="form-control" id="userpassword" name="userpassword"
+               value=<%=userpassword%> required>
+        <input type="hidden" maxlength="23" class="form-control" id="userotp" name="userotp"
+               value=<%=userotp%> required>
+        <div class="form-group row">
+            <div class="col-8 offset-4">
+                <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
+            </div>
+        </div>
+    </form>
+    <!--    <div class="text-center">Already have an account? <a href="#">Login here</a></div>-->
+</div>
+
+
+</body>
+<script>
+    const p = document.getElementById('response');
+    if(typeof error != 'undefined'){
+    error.forEach(error => {
+        p.textContent = error.message;
+    })
         delete error;
         delete no_err;
-    } %>
+    }
 
-    <%if(typeof no_err != 'undefined'){
-        no_err.forEach(no_err => {
-            %>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Success!</strong> <%=no_err.message%>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <%
-        }) %>
-        <%
+    if(typeof no_err != 'undefined'){
+    no_err.forEach(no_err => {
+        p.textContent = no_err.message;
+    })
         delete no_err;
-    } %>
-
-    <div class="container my-4">
-        <h3 class="text-center">An email would be send to your provided email <%=useremail%>.
-            Please provide the otp for sign up.</h3>
-        <form action="/user/register" method="post">
-            
-            <div class="form-group">
-                <label for="uservarcode">Varification Code</label>
-                <input type="text" maxlength="23" class="form-control" id="userotp" name="uservarcode" required>
-
-                <input type="hidden" maxlength="20" class="form-control" id="username" name="username" value=<%=username%>
-                    aria-describedby="emailHelp" placeholder="Not email" required>
-                <input type="hidden" maxlength="20" class="form-control" id="usernid" name="usernid" value=<%=usernid%>
-                    aria-describedby="emailHelp" placeholder="" required>
-                <input type="hidden" maxlength="50" class="form-control" id="useremail" name="useremail" value=<%=useremail%>
-                    aria-describedby="emailHelp" required>
-                <input type="hidden" class="form-control" id="phone" name="userphone" value=<%=userphone%>
-                    maxlength="11" pattern="[0-9]{11}" placeholder="01XXXXXXXXX(Use only digits)" required>
-                <input type="hidden" maxlength="23" class="form-control" id="userpassword" name="userpassword" 
-                value=<%=userpassword%> required>
-                <input type="hidden" maxlength="23" class="form-control" id="userotp" name="userotp" 
-                value=<%=userotp%> required>
-            </div>
-
-            <button type="submit" class="btn btn-primary">SignUp</button><br><br>
-        </form>
-    </div>
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-    </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
-    </script>
-</body>
-
+    }
+</script>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div class="container my-4">-->
+<!--    <h3 class="text-center">An email would be send to your provided email <%=useremail%>.-->
+<!--        Please provide the otp for sign up.</h3>-->
+<!--    <form action="/user/register" method="post">-->
+
+<!--        <div class="form-group">-->
+<!--            <label for="uservarcode">Varification Code</label>-->
+<!--            <input type="text" maxlength="23" class="form-control" id="userotp" name="uservarcode" required>-->
+
+<!--            <input type="hidden" maxlength="20" class="form-control" id="username" name="username" value=<%=username%>-->
+<!--            aria-describedby="emailHelp" placeholder="Not email" required>-->
+<!--            <input type="hidden" maxlength="20" class="form-control" id="usernid" name="usernid" value=<%=usernid%>-->
+<!--            aria-describedby="emailHelp" placeholder="" required>-->
+<!--            <input type="hidden" maxlength="50" class="form-control" id="useremail" name="useremail" value=<%=useremail%>-->
+<!--            aria-describedby="emailHelp" required>-->
+<!--            <input type="hidden" class="form-control" id="phone" name="userphone" value=<%=userphone%>-->
+<!--            maxlength="11" pattern="[0-9]{11}" placeholder="01XXXXXXXXX(Use only digits)" required>-->
+<!--            <input type="hidden" maxlength="23" class="form-control" id="userpassword" name="userpassword"-->
+<!--                   value=<%=userpassword%> required>-->
+<!--            <input type="hidden" maxlength="23" class="form-control" id="userotp" name="userotp"-->
+<!--                   value=<%=userotp%> required>-->
+<!--        </div>-->
+
+<!--        <button type="submit" class="btn btn-primary">SignUp</button><br><br>-->
+<!--    </form>-->
+<!--</div>-->
