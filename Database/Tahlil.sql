@@ -1,19 +1,3 @@
-drop table student;
-create table student(
-    id serial primary key,
-    name varchar(20),
-    prog varchar(20),
-    year int
-);
-
-insert into student(name,prog,year) values ('Tahlil', 'SWE', 2020);
-insert into student(name,prog,year) values ('Tah', 'SWE', 2020);
-insert into student(name,prog,year) values ('lil', 'SWE', 2020);
-insert into student(name,prog,year) values ('Mah', 'SWE', 2020);
-
-select * from student;
-
-
 -- SMETRO
 drop table users;
 
@@ -24,23 +8,42 @@ create table users(
     useremail varchar(100),
     userphone varchar(100),
     userpassword varchar(300),
+    userbalance int default 1000,
     reg_date date not null default current_timestamp
 );
+alter table users add userbalance int default 1000;
+update users set userbalance=10;
 select * from users;
 
+update users set userbalance=userbalance-100 where userid=1;
 
+
+drop table reservation;
 drop table trains;
 
 create table trains(
     trainid serial primary key,
     trainname varchar(100),
-    departure varchar(10),
-    destination varchar(10),
+    departure varchar(100),
+    destination varchar(100),
     departuredate date,
     departuretime timestamp,
     arrivaltime timestamp,
     seats int
 );
+
+CREATE TABLE reservation (
+    reservationid SERIAL PRIMARY KEY,
+    trainid INT,
+    userid INT,
+    avaiability smallint default 1,
+    qr_code bytea, -- new column to store QR code image data
+    reserve_time date not null default current_timestamp,
+    FOREIGN KEY (trainid) REFERENCES trains(trainid),
+    FOREIGN KEY (userid) REFERENCES users(userid)
+);
+
+select * from reservation;
 
 select * from trains;
 
@@ -54,19 +57,13 @@ create table fares(
 );
 select * from fares;
 
-drop table reservation;
+select amount from trains natural join fares where trainid=1;
+update users set userbalance=userbalance-$1 where userid=$2;
 
-CREATE TABLE reservation (
-    reservationid SERIAL PRIMARY KEY,
-    trainid INT,
-    userid INT,
-    avaiability smallint default 1,
-    qr_code bytea, -- new column to store QR code image data
-    reserve_time date not null default current_timestamp,
-    FOREIGN KEY (trainid) REFERENCES trains(trainid),
-    FOREIGN KEY (userid) REFERENCES users(userid)
-);
-select * from reservation;
+select departure,destination from reservation natural join trains
+where userid=$1;
+
+
 
 
 drop table admins;
@@ -82,8 +79,12 @@ create table admins(
 );
 select * from admins;
 
+SELECT * FROM trains natural join fares;
 
+update trains set seats=seats-1
+where trainid=1;
 
+select * from trains;
 
 INSERT INTO trains (trainname,departure,destination,departuredate,departuretime,arrivaltime,seats)
                         VALUES ('SuperExpress', 'mohakhali', 'uttara',
@@ -143,3 +144,16 @@ WHERE userid =6 order by reserve_time desc;
 INSERT INTO trains (trainname,departure,destination,seats,departuredate,departuretime,arrivaltime)
             VALUES ($1, $2, $3,$4,$5,$6,$7)
             RETURNING trainname,departure,destination,seats,departuredate,departuretime,arrivaltime`,
+
+select distinct (departure)from fares;
+
+
+
+
+
+
+
+
+
+
+
