@@ -119,6 +119,9 @@ app.get("/user/tickethistory",(req,res) =>{
         }
     );
 })
+app.get("/scanqr", async (req,res) => {
+    res.render('user/scanqr');
+});
 
 
 
@@ -442,6 +445,7 @@ app.post("/user/showqr",(req,res) =>{
 
 
 
+
 //Admin Get Methods
 app.get("/admin/adminlogin",checkAuthenticated,(req,res) =>{
     res.render('admin/adminlogin');
@@ -741,6 +745,7 @@ function checkNotAuthenticated(req, res, next) {
     }
     res.redirect("user/userlogin");
 }
+
 
 
 
