@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<!--
+-->
+    	<title>Smetro</title>
+    
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/fontAwesome.css">
+        <link rel="stylesheet" href="css/hero-slider.css">
+        <link rel="stylesheet" href="css/owl-carousel.css">
+        <link rel="stylesheet" href="css/datepicker.css">
+        <link rel="stylesheet" href="css/tooplate-style.css">
+
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+
+        <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+    </head>
+<body>
+
+    
+    <section class="banner" id="top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="left-side">
+                        <div class="tabs-content">
+                            <h4>Smetro</h4>
+                            <h3>Safety|Security|Puncuality</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 col-md-offset-1">
+                    <section id="first-tab-group" class="tabgroup">
+                        <div id="tab1">
+                            <div class="submit-form">
+                                <h4>Where do you want to go?</h4>
+                                <form id="form-submit" action="" method="get">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <fieldset>
+                                                <label for="from">From:</label>
+                                                <select required name='from' onchange='this.form.()'>
+                                                    <option value="">Select a station...</option>
+                                                    <option value="Uttara">Uttara</option>
+                                                    <option value="Mirpur-6">Mirpur-6</option>
+                                                    <option value="Mirpur-12">Mirpur-12</option>
+                                                    <option value="Khilkhet">Khilkhet</option>
+                                                    <option value="Agargaon">Agargaon</option>
+                                                    <option value="Mohammadpur">Mohammadpur</option>
+                                                </select>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <fieldset>
+                                                <label for="to">To:</label>
+                                                <select required name='to' onchange='this.form.()'>
+                                                    <option value="">Select a station...</option>
+                                                    <option value="Uttara">Uttara</option>
+                                                    <option value="Mirpur-6">Mirpur-6</option>
+                                                    <option value="Mirpur-12">Mirpur-12</option>
+                                                    <option value="Khilkhet">Khilkhet</option>
+                                                    <option value="Agargaon">Agargaon</option>
+                                                    <option value="Mohammadpur">Mohammadpur</option>
+                                                </select>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <fieldset>
+                                                <label for="departure">Date of journey:</label>
+                                                <input name="departure" type="text" class="form-control date" id="deparure" placeholder="Select date..." required="" onchange='this.form.()'>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <fieldset>
+                                                <label for="time">Time:</label>
+                                                <select required name='time' onchange='this.form.()'>
+                                                    <option value="">Select time...</option>
+                                                    <option value="10:00">10:00</option>
+                                                    <option value="13:00">13:00</option>
+                                                    <option value="16:00">16:00</option>
+                                                    <option value="22:00">22:00</option>
+                                                    <option value="00:30">00:30</option>
+                                                </select>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <fieldset>
+                                                <button type="submit" id="form-submit" class="btn">Order Ticket Now</button>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                <p>
+                    <a href="" target="_parent"><em>Terms & Conditions</em></a>
+                    <a href="" target="_parent"><em>|Privacy Policy</em></a>
+                    
+                </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+    <script src="js/vendor/bootstrap.min.js"></script>
+    
+    <script src="js/datepicker.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        
+
+        // navigation click actions 
+        $('.scroll-link').on('click', function(event){
+            event.preventDefault();
+            var sectionID = $(this).attr("data-id");
+            scrollToID('#' + sectionID, 750);
+        });
+        // scroll to top action
+        $('.scroll-top').on('click', function(event) {
+            event.preventDefault();
+            $('html, body').animate({scrollTop:0}, 'slow');         
+        });
+        // mobile nav toggle
+        $('#nav-toggle').on('click', function (event) {
+            event.preventDefault();
+            $('#main-nav').toggleClass("open");
+        });
+    });
+    // scroll function
+    function scrollToID(id, speed){
+        var offSet = 0;
+        var targetOffset = $(id).offset().top - offSet;
+        var mainNav = $('#main-nav');
+        $('html,body').animate({scrollTop:targetOffset}, speed);
+        if (mainNav.hasClass("open")) {
+            mainNav.css("height", "1px").removeClass("in").addClass("collapse");
+            mainNav.removeClass("open");
+        }
+    }
+    if (typeof console === "undefined") {
+        console = {
+            log: function() { }
+        };
+    }
+    </script>
+</body>
+</html>
