@@ -48,9 +48,14 @@ CREATE TABLE reservation (
 alter table reservation add column scanned_entertime timestamp;
 alter table reservation add column scanned_departuretime timestamp;
 
-select * from reservation;
+select * from reservation order by reservationid asc;
+select departuretime from reservation natural join trains where reservationid=1;
 
-update reservation set avaiability=1 where reservationid=2;
+update reservation set avaiability=1 where reservationid=1;
+UPDATE trains SET departuretime = NOW() + INTERVAL '1000 minutes',
+                  arrivaltime = NOW() - INTERVAL '100 minutes'
+              WHERE trainid = 1;
+
 
 update reservation
 set

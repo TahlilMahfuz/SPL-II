@@ -432,11 +432,47 @@ app.post("/user/showqr",(req,res) =>{
     
 })
 
+
+
 app.post('/api/scan', (req, res) => {
     const result = req.body.result;
     // Send this result to database
     console.log("The result is "+ result);
+});
+
+app.post('/user/checkValidity', (req, res) => {
+    const result = req.body.result;
+    // Send this result to database
+    console.log("The result is "+ result);
     //handle exceptions
+    pool.query(
+        `select departuretime from reservation natural join trains where reservationid=$1`,[result],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            else{  
+                const departureTime = results.rows[0].departuretime;
+                const currentTime = new Date();
+                if(departureTime<currentTime){
+                    let error=[];
+                    error.push({message:"Sorry!You have missed the train."});
+                    pool.query(
+                        `select distinct departure from fares`,
+                        (err,results)=>{
+                            if(err){
+                                throw err;
+                            }
+                            else{
+                                const resultsArray = Array.from(results.rows);
+                                res.render('user/dashboard',{results: resultsArray,error});
+                            }
+                        }
+                    );
+                }
+            }
+        }
+    );
     pool.query(
         `update reservation
         set 
