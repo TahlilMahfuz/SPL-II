@@ -38,12 +38,32 @@ CREATE TABLE reservation (
     userid INT,
     avaiability smallint default 1,
     qr_code bytea, -- new column to store QR code image data
+    scanned_entertime timestamp,
+    scanned_departuretime timestamp,
     reserve_time date not null default current_timestamp,
     FOREIGN KEY (trainid) REFERENCES trains(trainid),
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
 
+alter table reservation add column scanned_entertime timestamp;
+alter table reservation add column scanned_departuretime timestamp;
+
 select * from reservation;
+
+update reservation set avaiability=1 where reservationid=2;
+
+update reservation
+set
+    scanned_entertime=case
+        when avaiability=1 then now()
+        else scanned_entertime
+    end,
+    scanned_departuretime=case
+        when avaiability=2 then now()
+        else scanned_departuretime
+    end,
+    avaiability=avaiability+1
+where reservationid=1;
 
 select * from trains;
 
