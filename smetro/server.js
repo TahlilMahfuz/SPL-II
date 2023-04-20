@@ -33,6 +33,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('public'));
+app.use(express.json());
 
 
 
@@ -89,7 +90,7 @@ app.get("/user/tickethistory",(req,res) =>{
     pool.query(
         `SELECT *
         FROM reservation natural join trains natural join users
-        WHERE userid =$1 and avaiability=1
+        WHERE userid =$1 and avaiability<3
         order by reserve_time desc`,[uid],
         (err,results)=>{
             if(err){
@@ -119,7 +120,7 @@ app.get("/user/tickethistory",(req,res) =>{
         }
     );
 })
-app.get("/scanqr", async (req,res) => {
+app.get("/user/scanqr", async (req,res) => {
     res.render('user/scanqr');
 });
 
@@ -417,7 +418,7 @@ app.post("/user/showqr",(req,res) =>{
     pool.query(
         `SELECT *
         FROM reservation natural join trains natural join users
-        WHERE reservationid =$1 and avaiability=1
+        WHERE reservationid =$1 and avaiability<3
         order by reserve_time desc`,[reservationid],
         (err,results)=>{
             if(err){
@@ -430,6 +431,48 @@ app.post("/user/showqr",(req,res) =>{
     );
     
 })
+
+app.post('/api/scan', (req, res) => {
+    const result = req.body.result;
+    // Send this result to database
+    console.log("The result is "+ result);
+    //handle exceptions
+    pool.query(
+        `update reservation
+        set 
+            scanned_entertime=case
+                when avaiability=1 then now()
+                else scanned_entertime
+            end,
+            scanned_departuretime=case
+                when avaiability=2 then now()
+                else scanned_departuretime
+            end,
+            avaiability=avaiability+1
+        where reservationid=$1`,[result],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            else{  
+                let no_err=[];
+                no_err.push({message:"Passenger entered the station"});
+                pool.query(
+                    `select distinct departure from fares`,
+                    (err,results)=>{
+                        if(err){
+                            throw err;
+                        }
+                        else{
+                            const resultsArray = Array.from(results.rows);
+                            res.render('user/dashboard',{results: resultsArray,no_err});
+                        }
+                    }
+                );
+            }
+        }
+    );
+});
 
 
 
