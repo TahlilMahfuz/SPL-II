@@ -1,5 +1,9 @@
 -- SMETRO
+drop table reservation;
 drop table users;
+drop table admins;
+drop table fares;
+drop table trains;
 
 create table users(
     userid serial primary key,
@@ -11,15 +15,6 @@ create table users(
     userbalance int default 1000,
     reg_date date not null default current_timestamp
 );
-alter table users add userbalance int default 1000;
-update users set userbalance=10;
-select * from users;
-
-update users set userbalance=userbalance-100 where userid=1;
-
-
-drop table reservation;
-drop table trains;
 
 create table trains(
     trainid serial primary key,
@@ -36,7 +31,7 @@ CREATE TABLE reservation (
     reservationid SERIAL PRIMARY KEY,
     trainid INT,
     userid INT,
-    avaiability smallint default 1,
+    availability smallint default 1,
     qr_code bytea, -- new column to store QR code image data
     scanned_entertime timestamp,
     scanned_departuretime timestamp,
@@ -45,12 +40,46 @@ CREATE TABLE reservation (
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
 
+create table admins(
+    adminid serial primary key,
+    adminname varchar(100),
+    adminNID varchar(100),
+    adminemail varchar(100),
+    adminphone varchar(100),
+    adminpassword varchar(300),
+    reg_date date not null default current_timestamp
+);
+
+create table fares(
+    fareid serial primary key,
+    departure varchar(100),
+    destination varchar(100),
+    amount double precision
+);
+
+select * from fares;
+
+
+
+
+alter table users add userbalance int default 1000;
+update users set userbalance=10;
+
+update users set userbalance=userbalance-100 where userid=1;
+
+
 alter table reservation add column scanned_entertime timestamp;
 alter table reservation add column scanned_departuretime timestamp;
 
-select * from reservation;
+select * from reservation order by reservationid asc;
+select departuretime from reservation natural join trains where reservationid=4;
 
-update reservation set avaiability=1 where reservationid=2;
+update reservation set avaiability=1 where reservationid=4;
+UPDATE trains SET departuretime = NOW() + INTERVAL '1000 minutes',
+                  arrivaltime = NOW() - INTERVAL '100 minutes'
+              WHERE trainid = 1;
+
+select * from users;
 
 update reservation
 set
@@ -69,12 +98,7 @@ select * from trains;
 
 drop table fares;
 
-create table fares(
-    fareid serial primary key,
-    departure varchar(100),
-    destination varchar(100),
-    amount double precision
-);
+
 select * from fares;
 
 select amount from trains natural join fares where trainid=1;
@@ -88,15 +112,7 @@ where userid=$1;
 
 drop table admins;
 
-create table admins(
-    adminid serial primary key,
-    adminname varchar(100),
-    adminNID varchar(100),
-    adminemail varchar(100),
-    adminphone varchar(100),
-    adminpassword varchar(300),
-    reg_date date not null default current_timestamp
-);
+
 select * from admins;
 
 SELECT * FROM trains natural join fares;
