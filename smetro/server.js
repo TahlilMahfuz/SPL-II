@@ -90,7 +90,7 @@ app.get("/user/tickethistory",(req,res) =>{
     pool.query(
         `SELECT *
         FROM reservation natural join trains natural join users
-        WHERE userid =$1 and avaiability<3
+        WHERE userid =$1 and availability<3
         order by reserve_time desc`,[uid],
         (err,results)=>{
             if(err){
@@ -383,7 +383,7 @@ app.post("/user/confirmbook",async (req,res) =>{
             pool.query(
                 `SELECT *
                 FROM reservation natural join trains natural join users
-                WHERE userid =$1 and avaiability=1
+                WHERE userid =$1 and availability=1
                 order by reserve_time desc`,[uid],
                 (err,results)=>{
                     if(err){
@@ -418,7 +418,7 @@ app.post("/user/showqr",(req,res) =>{
     pool.query(
         `SELECT *
         FROM reservation natural join trains natural join users
-        WHERE reservationid =$1 and avaiability<3
+        WHERE reservationid =$1 and availability<3
         order by reserve_time desc`,[reservationid],
         (err,results)=>{
             if(err){
@@ -457,18 +457,25 @@ app.post('/user/checkValidity', (req, res) => {
                 if(departureTime<currentTime){
                     let error=[];
                     error.push({message:"Sorry!You have missed the train."});
-                    pool.query(
-                        `select distinct departure from fares`,
-                        (err,results)=>{
-                            if(err){
-                                throw err;
-                            }
-                            else{
-                                const resultsArray = Array.from(results.rows);
-                                res.render('user/dashboard',{results: resultsArray,error});
-                            }
-                        }
-                    );
+                    res.render('user/doorSystem',{error});
+                }
+            }
+        }
+    );
+    pool.query(
+        `select availability from reservation
+        where reservationid=$1`,[result],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            else{  
+                const availability = results.rows[0].availability;
+                console.log("ABAILABILITY: "+availability)
+                if(availability>=3){
+                    let error=[];
+                    error.push({message:"The ticket has been expired"});
+                    res.render('user/doorSystem',{error});
                 }
             }
         }
@@ -477,14 +484,14 @@ app.post('/user/checkValidity', (req, res) => {
         `update reservation
         set 
             scanned_entertime=case
-                when avaiability=1 then now()
+                when availability=1 then now()
                 else scanned_entertime
             end,
             scanned_departuretime=case
-                when avaiability=2 then now()
+                when availability=2 then now()
                 else scanned_departuretime
             end,
-            avaiability=avaiability+1
+            availability=availability+1
         where reservationid=$1`,[result],
         (err,results)=>{
             if(err){
@@ -492,19 +499,8 @@ app.post('/user/checkValidity', (req, res) => {
             }
             else{  
                 let no_err=[];
-                no_err.push({message:"Passenger entered the station"});
-                pool.query(
-                    `select distinct departure from fares`,
-                    (err,results)=>{
-                        if(err){
-                            throw err;
-                        }
-                        else{
-                            const resultsArray = Array.from(results.rows);
-                            res.render('user/dashboard',{results: resultsArray,no_err});
-                        }
-                    }
-                );
+                no_err.push({message:"The door is open!"});
+                res.render('user/doorSystem',{no_err});
             }
         }
     );
