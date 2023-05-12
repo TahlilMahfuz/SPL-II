@@ -1,9 +1,11 @@
 -- SMETRO
+drop table stuckpassangers;
 drop table reservation;
 drop table users;
 drop table admins;
 drop table fares;
 drop table trains;
+
 
 create table users(
     userid serial primary key,
@@ -57,8 +59,38 @@ create table fares(
     amount double precision
 );
 
+create table stuckpassangers(
+    stuckpassengerid serial primary key,
+    reservationID int,
+    extraCharge double precision,
+    foreign key (reservationID) references reservation(reservationID)
+);
+
 select * from fares;
 
+-- Copy only this portion
+
+-- These are the rough. Dont copy them to database
+
+insert into stuckpassangers (reservationID, extraCharge)
+values(3,10000);
+select * from stuckpassangers;
+select * from reservation;
+delete from reservation;
+
+update reservation
+        set
+            scanned_entertime=case
+                when availability=1 then now()
+                else scanned_entertime
+            end,
+            scanned_departuretime=case
+                when availability=2 then now()
+                else scanned_departuretime
+            end,
+            availability=availability+1
+        where reservationid=1
+returning reservation.scanned_departuretime,reservation.scanned_entertime;
 
 
 

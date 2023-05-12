@@ -471,7 +471,6 @@ app.post('/user/checkValidity', (req, res) => {
             }
             else{  
                 const availability = results.rows[0].availability;
-                console.log("ABAILABILITY: "+availability)
                 if(availability>=3){
                     let error=[];
                     error.push({message:"The ticket has been expired"});
@@ -492,15 +491,49 @@ app.post('/user/checkValidity', (req, res) => {
                 else scanned_departuretime
             end,
             availability=availability+1
-        where reservationid=$1`,[result],
+        where reservationid=$1
+        returning reservation.scanned_departuretime,reservation.scanned_entertime`,[result],
         (err,results)=>{
             if(err){
                 throw err;
             }
             else{  
-                let no_err=[];
-                no_err.push({message:"The door is open!"});
-                res.render('user/doorSystem',{no_err});
+                const enter = results.rows[0].scanned_entertime;
+                const departure = results.rows[0].scanned_departuretime;
+                
+                //Calculate the time difference in minutes
+                const timeDiffInMs = new Date(departure) - new Date(enter);
+                const timeDiffInMinutes = Math.round((timeDiffInMs / 1000) / 60);
+                
+                console.log("enter: "+enter);
+                console.log("departrue: "+departure);
+                console.log("Time diff in minutes: "+timeDiffInMinutes);
+                
+                if(timeDiffInMinutes>60){
+                    let hours=timeDiffInMinutes/60;
+                    let extraCharge=hours*100;
+
+                    pool.query(
+                        `insert into stuckpassangers (reservationID, extraCharge)
+                        values($1,$2)`,[result,extraCharge],
+                        (err,results)=>{
+                            if(err){
+                                throw err;
+                            }
+                            else{  
+                                let error=[];
+                                error.push({message:"You have some penalty charges pending for staying too long in the station. Please contact our customer service booth kindly to pay the dues."});
+                                res.render('user/doorSystem',{error});
+                            }
+                        }
+                    );
+                }
+                else{
+                    let no_err=[];
+                    no_err.push({message:"The door is open!"});
+                    res.render('user/doorSystem',{no_err});
+                }
+
             }
         }
     );
