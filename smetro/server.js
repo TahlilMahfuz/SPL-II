@@ -103,8 +103,8 @@ app.get("/user/tickethistory",(req,res) =>{
                 res.render("user/tickethistory",{results});
             }
             else{
-                let no_err=[];
-                no_err.push({message:"Sorry you have no previous tickets"});
+                let error=[];
+                error.push({message:"You have no previous tickets"});
                 pool.query(
                     `select distinct departure from fares`,
                     (err,results)=>{
@@ -113,7 +113,7 @@ app.get("/user/tickethistory",(req,res) =>{
                         }
                         console.log(results);
                         const resultsArray = Array.from(results.rows);
-                        res.render('user/dashboard',{results: resultsArray,no_err});
+                        res.render('user/dashboard',{results: resultsArray,error});
                     }
                 );
             }
