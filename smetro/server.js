@@ -221,6 +221,22 @@ app.post("/user/bookticket",async (req,res) =>{
 
     console.log(from,to,journeydate);
 
+    if(from == to){
+        pool.query(
+            `select distinct departure from fares`,
+            (err,results)=>{
+                if(err){
+                    throw err;
+                }
+                console.log(results);
+                const resultsArray = Array.from(results.rows);
+                let error=[];
+                error.push({ message: "Please select different departure and destination" });
+                res.render('user/dashboard',{results: resultsArray,arr,error});
+            }
+        );
+    }
+
     let arr=[];
     arr['username']=req.session.user.username;
 
