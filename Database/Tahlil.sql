@@ -66,11 +66,19 @@ create table stuckpassangers(
     foreign key (reservationID) references reservation(reservationID) on delete set null
 );
 
-select * from trains;
+select * from reservation;
 
 -- Copy only this portion
 
 -- These are the rough. Dont copy them to database
+
+update reservation set availability=2 where reservationid=6;
+delete from reservation where reservationid=5
+delete from stuckpassangers where reservationid=6
+select * from reservation;
+select * from stuckpassangers;
+
+select departuretime,availability from reservation natural join trains where reservationid=1
 
 insert into stuckpassangers (reservationID, extraCharge)
 values(3,10000);
@@ -106,25 +114,14 @@ alter table reservation add column scanned_departuretime timestamp;
 select * from reservation order by reservationid asc;
 select departuretime from reservation natural join trains where reservationid=4;
 
-update reservation set avaiability=1 where reservationid=4;
+update reservation set availability=1 where reservationid=1
 UPDATE trains SET departuretime = NOW() + INTERVAL '1000 minutes',
                   arrivaltime = NOW() - INTERVAL '100 minutes'
               WHERE trainid = 1;
 
 select * from users;
 
-update reservation
-set
-    scanned_entertime=case
-        when avaiability=1 then now()
-        else scanned_entertime
-    end,
-    scanned_departuretime=case
-        when avaiability=2 then now()
-        else scanned_departuretime
-    end,
-    avaiability=avaiability+1
-where reservationid=1;
+
 
 select * from trains;
 

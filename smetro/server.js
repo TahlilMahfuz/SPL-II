@@ -462,36 +462,44 @@ app.post('/user/checkValidity', (req, res) => {
     console.log("The result is "+ result);
     //handle exceptions
     pool.query(
-        `select departuretime from reservation natural join trains where reservationid=$1`,[result],
+        `select departuretime,availability from reservation natural join trains where reservationid=$1`,[result],
         (err,results)=>{
             if(err){
+                console.log("The rows returned are: "+ results.rows.length);
                 throw err;
             }
-            else{  
+            else if(results.rows.length>0){  
                 const departureTime = results.rows[0].departuretime;
+                const availability = results.rows[0].availability;
                 const currentTime = new Date();
-                if(departureTime<currentTime){
+                if(departureTime<currentTime && availability==0){
                     let error=[];
                     error.push({message:"Sorry!You have missed the train."});
                     res.render('user/doorSystem',{error});
                 }
-            }
-        }
-    );
-    pool.query(
-        `select availability from reservation
-        where reservationid=$1`,[result],
-        (err,results)=>{
-            if(err){
-                throw err;
-            }
-            else{  
-                const availability = results.rows[0].availability;
-                if(availability>=3){
+                else if(availability>=3){
                     let error=[];
                     error.push({message:"The ticket has been expired"});
                     res.render('user/doorSystem',{error});
                 }
+            }
+            else if(results.rows.length==0){
+                let arr=[];
+                arr['username']=req.session.user.username;
+                arr['userid']=req.user.userid;
+
+                pool.query(
+                    `select distinct departure from fares`,
+                    (err,results)=>{
+                        if(err){
+                            throw err;
+                        }
+                        let error=[];
+                        error.push({message:"No such reservation exists."})
+                        const resultsArray = Array.from(results.rows);
+                        res.render('user/dashboard',{results:resultsArray,arr,error});
+                    }
+                );
             }
         }
     );
@@ -513,7 +521,7 @@ app.post('/user/checkValidity', (req, res) => {
             if(err){
                 throw err;
             }
-            else{  
+            else if(results.rows.length>0){  
                 const enter = results.rows[0].scanned_entertime;
                 const departure = results.rows[0].scanned_departuretime;
                 
@@ -522,13 +530,13 @@ app.post('/user/checkValidity', (req, res) => {
                 const timeDiffInMinutes = Math.round((timeDiffInMs / 1000) / 60);
                 
                 console.log("enter: "+enter);
-                console.log("departrue: "+departure);
-                console.log("Time diff in minutes: "+timeDiffInMinutes);
+                console.log("departure: "+departure);
+                console.log("Time diff in minutes:1 "+timeDiffInMinutes);
                 
-                if(timeDiffInMinutes>60){
-                    let hours=timeDiffInMinutes/60;
-                    let extraCharge=hours*100;
-
+                if(timeDiffInMinutes>120){
+                    const extraCharge=((timeDiffInMinutes-120)/60)*100;
+                    console.log("Extra charge is: "+extraCharge);
+                    
                     pool.query(
                         `insert into stuckpassangers (reservationID, extraCharge)
                         values($1,$2)`,[result,extraCharge],
@@ -538,7 +546,7 @@ app.post('/user/checkValidity', (req, res) => {
                             }
                             else{  
                                 let error=[];
-                                error.push({message:"You have some penalty charges pending for staying too long in the station. Please contact our customer service booth kindly to pay the dues."});
+                                error.push({message:"You have some penalty charges("+extraCharge+") pending for staying too long in the station. Please contact our customer service booth kindly to pay the dues."});
                                 res.render('user/doorSystem',{error});
                             }
                         }
