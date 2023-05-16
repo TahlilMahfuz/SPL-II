@@ -579,7 +579,20 @@ app.get("/admin/adminsignup", (req,res) =>{
     res.render('admin/adminsignup');
 })
 app.get("/admin/admindashboard", (req,res) =>{
-    res.render('admin/admindashboard');
+
+    pool.query(
+        `select * from fares`,
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            else{  
+                console.log(results);
+                const resultsArray = Array.from(results.rows);
+                res.render('admin/admindashboard',{results});
+            }
+        }
+    );
 })
 app.get("/admin/addtrain", (req,res) =>{
     pool.query(
@@ -590,7 +603,17 @@ app.get("/admin/addtrain", (req,res) =>{
             }
             
             const resultsArray = Array.from(results.rows);
-            res.render('admin/addtrain',{results: resultsArray});
+            pool.query(
+                `select * from trains`,
+                (err,result)=>{
+                    if(err){
+                        throw err;
+                    }
+                    else{
+                        res.render('admin/addtrain',{results: resultsArray,result});
+                    }
+                }
+            );
         }
     );
 })
@@ -708,7 +731,21 @@ app.post("/admin/adminlogin",async (req,res) =>{
               }
               if (isMatch) {
                 req.session.admin=results;
-                res.render("admin/admindashboard");
+                pool.query(
+                    `select * from fares`,
+                    (err,results)=>{
+                        if(err){
+                            throw err;
+                        }
+                        else{  
+                            console.log("Fare details: ");
+                            console.log(results);
+                            const resultsArray = Array.from(results.rows);
+                            res.render('admin/admindashboard',{results});
+                        }
+                    }
+                );
+                // res.render("admin/admindashboard");
               } 
               else {
                 //password is incorrect
@@ -746,7 +783,17 @@ app.post("/admin/addroute",async (req,res) =>{
   
           if (results.rows.length > 0) {
             error.push({message:"Route already exists"});
-            res.render("admin/admindashboard",{error});
+            pool.query(
+                `select * from fares`,
+                (err,results)=>{
+                    if(err){
+                        throw err;
+                    }
+                    else{  
+                        res.render('admin/admindashboard',{results,error});
+                    }
+                }
+            );
           }
           else{
             pool.query(
@@ -772,7 +819,17 @@ app.post("/admin/addroute",async (req,res) =>{
                     // console.log(results.rows);
                     
                     no_err.push({message:"Fare Inserted"});
-                    res.render("admin/admindashboard",{no_err});
+                    pool.query(
+                        `select * from fares`,
+                        (err,results)=>{
+                            if(err){
+                                throw err;
+                            }
+                            else{  
+                                res.render('admin/admindashboard',{results,no_err});
+                            }
+                        }
+                    );
                 }
             );
           }
@@ -797,8 +854,17 @@ app.post("/admin/addtrain",async (req,res) =>{
                 }
                 
                 const resultsArray = Array.from(results.rows);
-                
-                res.render('admin/addtrain',{results: resultsArray,error});
+                pool.query(
+                    `select * from trains`,
+                    (err,result)=>{
+                        if(err){
+                            throw err;
+                        }
+                        else{
+                            res.render('admin/addtrain',{results: resultsArray,error,result});
+                        }
+                    }
+                );   
             }
         );
     }
@@ -825,10 +891,80 @@ app.post("/admin/addtrain",async (req,res) =>{
                 const resultsArray = Array.from(results.rows);
                 let no_err=[];
                 no_err.push({message:"Train Info Inserted"});
-                res.render('admin/addtrain',{results: resultsArray,no_err});
+                pool.query(
+                    `select * from trains`,
+                    (err,result)=>{
+                        if(err){
+                            throw err;
+                        }
+                        else{
+                            res.render('admin/addtrain',{results: resultsArray,no_err,result});
+                        }
+                    }
+                );
             }
         );
     }
+});
+
+app.post("/admin/deletefare",async (req,res) =>{
+    let {deletefare} = req.body;
+    
+    pool.query(
+        `Delete from fares where fareid=$1`,[deletefare],
+        (err, results) => {
+            if (err) {
+                throw err;
+            }
+            else{
+                let no_err=[];
+                pool.query(
+                    `select * from fares`,
+                    (err,results)=>{
+                        if(err){
+                            throw err;
+                        }
+                        else{  
+                            console.log("Fare details: ");
+                            console.log(results);
+                            no_err.push({message:"Fare has been deleted"});
+                            res.render('admin/admindashboard',{results,no_err});
+                        }
+                    }
+                );
+            }
+        }
+    );
+});
+
+
+
+app.post("/admin/deletetrain",async (req,res) =>{
+    let {deletetrain} = req.body;
+    
+    pool.query(
+        `Delete from trains where trainid=$1`,[deletetrain],
+        (err, results) => {
+            if (err) {
+                throw err;
+            }
+            else{
+                let no_err=[];
+                pool.query(
+                    `select * from trains`,
+                    (err,results)=>{
+                        if(err){
+                            throw err;
+                        }
+                        else{
+                            no_err.push({message:"Train has been deleted"});
+                            res.render('admin/admindashboard',{results,no_err});
+                        }
+                    }
+                );
+            }
+        }
+    );
 })
 
 

@@ -38,7 +38,7 @@ CREATE TABLE reservation (
     scanned_entertime timestamp,
     scanned_departuretime timestamp,
     reserve_time date not null default current_timestamp,
-    FOREIGN KEY (trainid) REFERENCES trains(trainid),
+    FOREIGN KEY (trainid) REFERENCES trains(trainid) on delete cascade,
     FOREIGN KEY (userid) REFERENCES users(userid)
 );
 
@@ -66,7 +66,7 @@ create table stuckpassangers(
     foreign key (reservationID) references reservation(reservationID)
 );
 
-select * from fares;
+select * from trains;
 
 -- Copy only this portion
 
