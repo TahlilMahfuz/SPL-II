@@ -44,7 +44,17 @@ app.use(express.json());
 
 //GET METHODS
 app.get("/",checkIndexAuthenticated,(req,res) =>{
-    res.render('index');
+    pool.query(
+        `select distinct departure from fares`,
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            console.log(results);
+            const resultsArray = Array.from(results.rows);
+            res.render('index',{results: resultsArray});
+        }
+    );
 })
 
 app.get("/user/dashboard",(req,res) =>{
@@ -215,6 +225,8 @@ app.post("/user/userlogin",passport.authenticate("local",{
     failureFlash:true
 }));
 
+
+
 app.post("/user/bookticket",async (req,res) =>{
 
     let {from,to,journeydate} = req.body;
@@ -267,8 +279,60 @@ app.post("/user/bookticket",async (req,res) =>{
                     console.log(results);
                     const resultsArray = Array.from(results.rows);
                     
-                    error.push({ message: "Sorry, no trains available" });
+                    error.push({ message: "Sorry, no trains available for this date" });
                     res.render('user/dashboard',{results: resultsArray,arr,error});
+                }
+            );
+          }
+        }
+    );
+})
+
+app.post("/user/query",async (req,res) =>{
+    let {from,to,journeydate} = req.body;
+    if(from == to){
+        pool.query(
+            `select distinct departure from fares`,
+            (err,results)=>{
+                if(err){
+                    throw err;
+                }
+                console.log(results);
+                const resultsArray = Array.from(results.rows);
+                let error=[];
+                error.push({ message: "Please select different departure and destination" });
+                res.render('index',{results: resultsArray,error});
+            }
+        );
+    }
+    pool.query(
+        `SELECT * FROM trains natural join fares 
+        WHERE departure = $1 AND destination = $2 AND departuredate = $3 and seats>0`,
+        [from, to, journeydate],
+        (err, results) => {
+          if (err) {
+            throw err;
+          }
+          console.log("database connected");
+          console.log(results.rows);
+      
+          if (results.rows.length > 0) {
+            console.log(results.rows.length);
+            res.render("ticketlist", {results});
+          } 
+          else {
+            let error = [];
+            pool.query(
+                `select distinct departure from fares`,
+                (err,results)=>{
+                    if(err){
+                        throw err;
+                    }
+                    console.log(results);
+                    const resultsArray = Array.from(results.rows);
+                    
+                    error.push({ message: "Sorry, no trains available for this date" });
+                    res.render('user/dashboard',{results: resultsArray,error});
                 }
             );
           }
@@ -452,8 +516,6 @@ app.post("/user/showqr",(req,res) =>{
 
 app.post('/api/scan', (req, res) => {
     const result = req.body.result;
-    // Send this result to database
-    console.log("The result is "+ result);
 });
 
 app.post('/user/checkValidity', (req, res) => {
@@ -516,7 +578,10 @@ app.post('/user/checkValidity', (req, res) => {
             end,
             availability=availability+1
         where reservationid=$1
-        returning reservation.scanned_departuretime,reservation.scanned_entertime`,[result],
+        returning reservation.scanned_departuretime,
+        reservation.scanned_entertime,
+        reservation.availability,
+        reservation.trainid`,[result],
         (err,results)=>{
             if(err){
                 throw err;
@@ -524,6 +589,8 @@ app.post('/user/checkValidity', (req, res) => {
             else if(results.rows.length>0){  
                 const enter = results.rows[0].scanned_entertime;
                 const departure = results.rows[0].scanned_departuretime;
+                const availability = results.rows[0].availability;
+                const trainid = results.rows[0].trainid;
                 
                 //Calculate the time difference in minutes
                 const timeDiffInMs = new Date(departure) - new Date(enter);
@@ -531,6 +598,8 @@ app.post('/user/checkValidity', (req, res) => {
                 
                 console.log("enter: "+enter);
                 console.log("departure: "+departure);
+                console.log("availability: "+availability);
+                console.log("trainid: "+trainid);
                 console.log("Time diff in minutes:1 "+timeDiffInMinutes);
                 
                 if(timeDiffInMinutes>120){
@@ -555,7 +624,22 @@ app.post('/user/checkValidity', (req, res) => {
                 else{
                     let no_err=[];
                     no_err.push({message:"The door is open!"});
-                    res.render('user/doorSystem',{no_err});
+                    if(availability==3){
+                        pool.query(
+                            `update trains set seats=seats+1 where trainid=$1`,[trainid],
+                            (err,results)=>{
+                                if(err){
+                                    throw err;
+                                }
+                                else{
+                                    res.render('user/doorSystem',{no_err});
+                                }
+                            }
+                        );
+                    }
+                    else{
+                        res.render('user/doorSystem',{no_err});
+                    }
                 }
 
             }
