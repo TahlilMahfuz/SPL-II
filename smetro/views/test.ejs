@@ -1,82 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Background Image with Table</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <%-include('./partials/header') %>
 
-    <link rel="stylesheet" href="../css/owl-carousel.css">
-    <link rel="stylesheet" href="../css/datepicker.css">
-    <link rel="stylesheet" href="../css/tooplate-style.css">
-    <link rel="stylesheet" href="../css/footer.css">
-    <!-- <link rel="stylesheet" href="css/newnavbar.css"> -->
 
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-    <style>
-        body {
-            background-image: url('img/metro1.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 85vh;
-        }
-
-        table {
-            background-color: rgba(255, 255, 255, 0.8);
-            border-collapse: collapse;
-            padding: 20px;
-        }
-
-        th,
-        td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
 </head>
 <body>
-    <%-include('./partials/nav') %>
-    <div class="container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Header 1</th>
-                    <th>Header 2</th>
-                    <th>Header 3</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Data 1</td>
-                    <td>Data 2</td>
-                    <td>Data 3</td>
-                </tr>
-                <tr>
-                    <td>Data 4</td>
-                    <td>Data 5</td>
-                    <td>Data 6</td>
-                </tr>
-                <!-- Add more rows as needed -->
-            </tbody>
-        </table>
-    </div>
+  
+  <!-- Button trigger modal -->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Launch demo modal
+</button>
 
-    <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
+
+
 </html>
