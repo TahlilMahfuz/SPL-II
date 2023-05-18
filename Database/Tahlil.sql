@@ -67,6 +67,7 @@ create table stuckpassangers(
 );
 
 select * from reservation;
+select * from trains;
 
 -- Copy only this portion
 
