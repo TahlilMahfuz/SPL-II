@@ -173,18 +173,30 @@ app.post("/user/usersignup",async (req,res) =>{
                 if(err){
                     throw err;
                 }
-                console.log("database connected");
-                console.log(results.rows);
-
                 if(results.rows.length>0){
                     error.push({message: "Email already exists"});
                     res.render("user/usersignup",{error});
                 }
                 else{
-                    let message="Your otp varification code is ";
-                    let subject="Verify your account";
-                    sendMail(useremail,userotp,subject,message);
-                    res.render('user/register',{username,usernid,useremail,userphone,userpassword,userotp});
+                    pool.query(
+                        `select * from users where userphone=$1`,[userphone],
+                        (err,results)=>{
+                            if(err){
+                                throw err;
+                            }
+            
+                            if(results.rows.length>0){
+                                error.push({message: "Phone number already exists"});
+                                res.render("user/usersignup",{error});
+                            }
+                            else{
+                                let message="Your otp varification code is ";
+                                let subject="Verify your account";
+                                sendMail(useremail,userotp,subject,message);
+                                res.render('user/register',{username,usernid,useremail,userphone,userpassword,userotp});
+                            }
+                        }
+                    );
                 }
             }
         );
