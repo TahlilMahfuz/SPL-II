@@ -38,6 +38,7 @@ CREATE TABLE reservation (
     scanned_entertime timestamp,
     scanned_departuretime timestamp,
     reserve_time date not null default current_timestamp,
+    bookingtoken int,
     FOREIGN KEY (trainid) REFERENCES trains(trainid) on delete set null ,
     FOREIGN KEY (userid) REFERENCES users(userid) on delete set null
 );

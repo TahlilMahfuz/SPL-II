@@ -344,10 +344,23 @@ app.post("/user/query",async (req,res) =>{
     );
 })
 
+app.post("/user/varifybooking",(req,res) =>{
+    const token = Math.floor(1000 + Math.random() * 9000);
+    let {trainid} = req.body;
+    req.session.user.bookingtoken=token;
+    let message="Your otp varification code for booking confirmation is ";
+    let subject="Verify your booking";
+    sendMail(req.session.user.useremail,token,subject,message);
+    let no_err=[];
+    no_err.push({message:"Please provide the booking token sent to your email"});
+    res.render('user/varifybooking',{trainid,no_err});
+})
+
 app.post("/user/confirmbook",async (req,res) =>{
 
-    let {trainid} = req.body;
-    console.log("trainID: ");
+    let {trainid,token} = req.body;
+    if(req.session.user.bookingtoken==token){
+        console.log("trainID: ");
 
     console.log(trainid);
 
@@ -478,7 +491,7 @@ app.post("/user/confirmbook",async (req,res) =>{
 
                     if(results.rows.length>0){
                         no_err.push({message:"Ticket Confirmed."});
-                        res.render("user/tickethistory",{results});
+                        res.render("user/tickethistory",{results,no_err});
                     }
                     else{
                         no_err.push({message:"Sorry you have no previous tickets"});
@@ -488,6 +501,24 @@ app.post("/user/confirmbook",async (req,res) =>{
             );
         }
     );
+    }
+    else{
+        let error=[];
+        error.push({message:"Wrong token provided.Booking canceled."})
+        pool.query(
+            `select distinct departure from fares`,
+            (err,results)=>{
+                if(err){
+                    throw err;
+                }
+                let error=[];
+                error.push({message:"No such reservation exists."})
+                const resultsArray = Array.from(results.rows);
+                res.render('user/dashboard',{results:resultsArray,arr,error});
+            }
+        );
+    }
+    
 })
 app.post("/user/showqr",(req,res) =>{
     let {reservationid}=req.body;
