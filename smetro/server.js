@@ -134,6 +134,10 @@ app.get("/user/scanqr", async (req,res) => {
     res.render('user/scanqr');
 });
 
+app.get("/test", async (req,res) => {
+    res.render('test');
+});
+
 
 
 
