@@ -88,6 +88,8 @@ select * from stuckpassengers natural join reservation natural join users where 
 
 -- These are the rough. Dont copy them to database
 
+insert into nidrecord values ('123');
+
 update reservation set availability=2 where reservationid=6;
 delete from reservation where reservationid=5
 delete from stuckpassangers where reservationid=6
