@@ -249,14 +249,30 @@
                             
                         </div>
                     </div>
-                    <div class="job-right my-4 flex-shrink-0">
-                        <div >
-                          <form action="/user/showqr" method="post">
-                            <input type="hidden" maxlength="50" class="form-control" id="reservationid" name="reservationid" aria-describedby="emailHelp" value=<%=data.reservationid %> required>
-                            <button type="submit" class="btn d-block w-100 d-sm-inline-block btn-light">Generate Ticket</button><br><br>
-                        </form>
+                    <ul>
+                        <li>
+                          
+                        <div class="job-right my-4 flex-shrink-0">
+                            <div >
+                              <form action="/user/showqr" method="post">
+                                <input type="hidden" maxlength="50" class="form-control" id="reservationid" name="reservationid" aria-describedby="emailHelp" value=<%=data.reservationid %> required>
+                                <button type="submit" class="btn d-block w-100 d-sm-inline-block btn-light">Generate Ticket</button><br><br>
+                            </form>
+                            </div>
                         </div>
-                    </div>
+                        </li>
+                        <ul>
+                        <li>
+                        <div class="job-right my-4 flex-shrink-0">
+                          <div >
+                            <form action="#" method="post">
+                              <input type="hidden" maxlength="50" class="form-control" id="" name="" aria-describedby="emailHelp" value= required>
+                              <button type="submit" class="btn d-block w-100 d-sm-inline-block btn-light">Refund Ticket</button><br><br>
+                          </form>
+                          </div>
+                        </div>
+                        </li>
+                        </ul>
                 </div>
             <% }); %>
         </div>
