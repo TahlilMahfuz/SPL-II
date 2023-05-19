@@ -129,6 +129,25 @@
     </script>
 
 
+    <script>
+        // Get today's date
+        var today = new Date();
+    
+        // Set the minimum attribute of the date input field to today's date
+        var minDate = today.toISOString().split('T')[0];
+        document.getElementById('journeydate').setAttribute('min', minDate);
+    
+        // Calculate the date 7 days from today
+        var nextWeek = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
+    
+        // Format the next week's date in yyyy-MM-dd format
+        var nextWeekDate = nextWeek.toISOString().split('T')[0];
+    
+        // Set the maximum attribute of the date input field to next week's date
+        document.getElementById('journeydate').setAttribute('max', nextWeekDate);
+    </script>
+
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
