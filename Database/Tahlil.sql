@@ -2,11 +2,15 @@
 drop table stuckpassengers;
 drop table reservation;
 drop table users;
+drop table nidrecord;
 drop table admins;
 drop table fares;
 drop table trains;
 
 
+create table nidrecord(
+    nid varchar primary key
+);
 create table users(
     userid serial primary key,
     Username varchar(100),
@@ -15,7 +19,8 @@ create table users(
     userphone varchar(100),
     userpassword varchar(300),
     userbalance int default 1000,
-    reg_date date not null default current_timestamp
+    reg_date date not null default current_timestamp,
+    foreign key (usernid) references nidrecord(nid)
 );
 
 create table trains(
@@ -68,6 +73,8 @@ create table stuckpassengers(
 );
 
 
+
+
 update stuckpassengers set status=status-1 where reservationid = 1
 select * from stuckpassengers;
 select * from reservation;
@@ -80,6 +87,8 @@ select * from stuckpassengers natural join reservation natural join users where 
 -- Copy only this portion
 
 -- These are the rough. Dont copy them to database
+
+insert into nidrecord values ('123');
 
 update reservation set availability=2 where reservationid=6;
 delete from reservation where reservationid=5

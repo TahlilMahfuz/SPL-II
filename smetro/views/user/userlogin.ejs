@@ -7,19 +7,39 @@
 </head>
 
 <body>
-    <%if(messages.error){
-        %>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Sorry!</strong> <%=messages.error%>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+  <% if (messages.error) { %>
+    <div class="modal fade show" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Sorry!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <%= messages.error %>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-        <%
-        delete error;
-    } %>
+    </div>
+    <script>
+        $(document).ready(function () {
+                $('#errorModal').modal('show');
+                setTimeout(function () {
+                    $('#errorModal').modal('hide');
+                }, 3000);
+            });
+    </script>
+    <% delete messages.error; %>
+<% } %>
 
-    <section class="vh-100" style="background-color: #9A616D; margin-top: -50px;">
+    
+    <div>
+      <section class="vh-100" style="background-color: #20315e; margin-top: -50px;">
         <%-include('../partials/nav') %>
         <div class="container py-5 h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
@@ -37,15 +57,15 @@
                       <form action="/user/userlogin" method="post">
       
                         <div class="d-flex align-items-center mb-3 pb-1">
-                          <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
-                          <span class="h1 fw-bold mb-0">Logo</span>
+                          <i class="fas fa-train fa-2x me-3" style="color: #ff6219;"></i>
+                          <span class="h1 fw-bold mb-0">SMetro</span>
+                          
                         </div>
       
                         <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
       
                         <div class="form-outline mb-4">
-                          <input type="email" class="form-control form-control-lg maxlength="50" 
-                          id="email" name="email"
+                          <input type="text" class="form-control form-control-lg" maxlength="50" id="email" name="email"
                           aria-describedby="emailHelp" required/>
                           <label class="form-label" for="email">Email address</label>
                         </div>
@@ -56,12 +76,13 @@
                         </div>
       
                         <div class="pt-1 mb-4">
-                          <button class="btn btn-dark btn-lg btn-block" type="button">Login</button>
+                          <button class="btn btn-dark btn-lg btn-block" type="submit">Login</button>
                         </div>
                         <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="/user/usersignup"
                             style="color: #393f81;">Register here</a></p>
                       </form>
-
+                      <p class="mb-5 pb-lg-2" style="color: #393f81;">Are you an admin? <a href="/admin/adminsignup"
+                        style="color: #393f81;">Click Here</a></p>
                     </div>
                   </div>
                 </div>
@@ -70,6 +91,7 @@
           </div>
         </div>
       </section>
+    </div>
       
 
 
