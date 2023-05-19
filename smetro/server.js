@@ -222,10 +222,6 @@ app.post("/user/register",async (req,res) =>{
             if (err) {
                 throw err;
             }
-                console.log(results.rows);
-                console.log("Data inserted");
-                req.flash("success_msg", "You are now registered. Please log in");
-
                 let no_err=[];
                 no_err.push({message:"Account created. You can log in now"});
                 res.render("user/userlogin",{no_err});
