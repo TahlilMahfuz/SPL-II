@@ -2,6 +2,191 @@
 <html lang="en">
 
 <head>
+    <style>
+
+        body{
+            background:#f5f5f5;
+            margin-top:20px;}
+        
+        /* ===== Career ===== */
+        .career-form {
+          background-color: #4e63d7;
+          border-radius: 5px;
+          padding: 0 16px;
+        }
+        
+        .career-form .form-control {
+          background-color: rgba(255, 255, 255, 0.2);
+          border: 0;
+          padding: 12px 15px;
+          color: #fff;
+        }
+        
+        .career-form .form-control::-webkit-input-placeholder {
+          /* Chrome/Opera/Safari */
+          color: #fff;
+        }
+        
+        .career-form .form-control::-moz-placeholder {
+          /* Firefox 19+ */
+          color: #fff;
+        }
+        
+        .career-form .form-control:-ms-input-placeholder {
+          /* IE 10+ */
+          color: #fff;
+        }
+        
+        .career-form .form-control:-moz-placeholder {
+          /* Firefox 18- */
+          color: #fff;
+        }
+        
+        .career-form .custom-select {
+          background-color: rgba(255, 255, 255, 0.2);
+          border: 0;
+          padding: 12px 15px;
+          color: #fff;
+          width: 100%;
+          border-radius: 5px;
+          text-align: left;
+          height: auto;
+          background-image: none;
+        }
+        
+        .career-form .custom-select:focus {
+          -webkit-box-shadow: none;
+                  box-shadow: none;
+        }
+        
+        .career-form .select-container {
+          position: relative;
+        }
+        
+        .career-form .select-container:before {
+          position: absolute;
+          right: 15px;
+          top: calc(50% - 14px);
+          font-size: 18px;
+          color: #ffffff;
+          content: '\F2F9';
+          font-family: "Material-Design-Iconic-Font";
+        }
+        
+        .filter-result .job-box {
+        background:#fff;
+          -webkit-box-shadow: 0 0 35px 0 rgba(130, 130, 130, 0.2);
+                  box-shadow: 0 0 35px 0 rgba(130, 130, 130, 0.2);
+          border-radius: 10px;
+          padding: 10px 35px;
+        }
+        
+        ul {
+          list-style: none; 
+        }
+        
+        .list-disk li {
+          list-style: none;
+          margin-bottom: 12px;
+        }
+        
+        .list-disk li:last-child {
+          margin-bottom: 0;
+        }
+        
+        .job-box .img-holder {
+          height: 65px;
+          width: 65px;
+          background-color: #4e63d7;
+          background-image: -webkit-gradient(linear, left top, right top, from(rgba(78, 99, 215, 0.9)), to(#5a85dd));
+          background-image: linear-gradient(to right, rgba(78, 99, 215, 0.9) 0%, #5a85dd 100%);
+          font-family: "Open Sans", sans-serif;
+          color: #fff;
+          font-size: 22px;
+          font-weight: 700;
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-box-pack: center;
+              -ms-flex-pack: center;
+                  justify-content: center;
+          -webkit-box-align: center;
+              -ms-flex-align: center;
+                  align-items: center;
+          border-radius: 65px;
+        }
+        
+        .career-title {
+          background-color: #4e63d7;
+          color: #fff;
+          padding: 15px;
+          text-align: center;
+          border-radius: 10px 10px 0 0;
+          background-image: -webkit-gradient(linear, left top, right top, from(rgba(78, 99, 215, 0.9)), to(#5a85dd));
+          background-image: linear-gradient(to right, rgba(78, 99, 215, 0.9) 0%, #5a85dd 100%);
+        }
+        
+        .job-overview {
+          -webkit-box-shadow: 0 0 35px 0 rgba(130, 130, 130, 0.2);
+                  box-shadow: 0 0 35px 0 rgba(130, 130, 130, 0.2);
+          border-radius: 10px;
+        }
+        
+        @media (min-width: 992px) {
+          .job-overview {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 70px;
+          }
+        }
+        
+        .job-overview .job-detail ul {
+          margin-bottom: 28px;
+        }
+        
+        .job-overview .job-detail ul li {
+          opacity: 0.75;
+          font-weight: 600;
+          margin-bottom: 15px;
+        }
+        
+        .job-overview .job-detail ul li i {
+          font-size: 20px;
+          position: relative;
+          top: 1px;
+        }
+        
+        .job-overview .overview-bottom,
+        .job-overview .overview-top {
+          padding: 35px;
+        }
+        
+        .job-content ul li {
+          font-weight: 600;
+          opacity: 0.75;
+          border-bottom: 1px solid #ccc;
+          padding: 10px 5px;
+        }
+        
+        @media (min-width: 768px) {
+          .job-content ul li {
+            border-bottom: 0;
+            padding: 0;
+          }
+        }
+        
+        .job-content ul li i {
+          font-size: 20px;
+          position: relative;
+          top: 1px;
+        }
+        
+        .mb-30 {
+            margin-bottom: 30px;
+        }
+        
+        h5,h6 {font-family: 'Montserrat', sans-serif; text-transform:uppercase; font-weight:700;}
+        </style>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,54 +194,10 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css" integrity="sha256-3sPp8BkKUE7QyPSl6VfBByBroQbKxKG7tsusY2mhbVY=" crossorigin="anonymous" />
+        
     <title>Login</title>
-
-    <style>
-        * {
-    /* Change your font family */
-    font-family: sans-serif;
-  }
-
-  .content-table {
-    border-collapse: collapse;
-    margin: 25px 0;
-    font-size: 0.9em;
-    min-width: 400px;
-    border-radius: 5px 5px 0 0;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  }
-
-  .content-table thead tr {
-    background-color: #009879;
-    color: #ffffff;
-    text-align: left;
-    font-weight: bold;
-  }
-
-  .content-table th,
-  .content-table td {
-    padding: 12px 15px;
-  }
-
-  .content-table tbody tr {
-    border-bottom: 1px solid #dddddd;
-  }
-
-  .content-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-  }
-
-  .content-table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
-  }
-
-  .content-table tbody tr.active-row {
-    font-weight: bold;
-    color: #009879;
-  }
-</style>
 </head>
 
 <body>
@@ -73,59 +214,53 @@
             <div class="card-header py-3">
                 <h3 class="m-0 font-weight-bold text-info text-center">Ticket List</h3>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="content-table">
-                        <thead>
-                          <tr>
-                            <th>Train Name</th>
-                            <th>Departure</th>
-                            <th>Destination</th>
-                            <th>Departure Time</th>
-                            <th>Arrival Time</th>
-                            <th>Available seats</th>
-                            <th>Fare</th>
-                            <th>Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <% results.rows.forEach(function(train) { %>
-                            <tr>
-                                <td>
-                                    <%= train.trainname %>
-                                </td>
-                                <td>
-                                    <%= train.departure %>
-                                </td>
-                                <td>
-                                    <%= train.destination %>
-                                </td>
-                                <td>
-                                    <%= train.departuretime.toISOString().slice(11, 16)%>
-                                </td>
-                                <td>
-                                    <%= train.arrivaltime.toISOString().slice(11, 16)%>
-                                </td>
-                                <td>
-                                    <%= train.seats%>
-                                </td>
-                                <td>
-                                    <%= train.amount%> 
-                                </td>
-                                <td>
-                                    <form action="/user/varifybooking" method="post">
-                                        <input type="hidden" maxlength="50" class="form-control" 
-                                        id="trainid" name="trainid" aria-describedby="emailHelp" value=<%=train.trainid %> required>
-                                        <button type="submit" class="btn btn-success">Book Now</button><br><br>
-                                    </form>
-                                    
-                                </td>
-                            </tr>
-                        <% }); %>
-                        </tbody>
-                      </table>
+            <% results.rows.forEach(function(train) { %>
+                <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
+                    <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
+                        <!-- <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
+                            FD
+                        </div> -->
+                        <div class="job-content">
+                            <ul>
+                              <h5 class="text-center text-md-left"><%= train.trainname %></h5>
+                            </ul>
+                            <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
+                                <li class="mr-md-4">
+                                    <i class="zmdi zmdi-pin mr-2"></i> <%= train.departure %>
+                                </li>
+                                <li class="mr-md-4">
+                                    <i class="zmdi zmdi-pin mr-2"></i> <%= train.destination %>
+                                </li>
+                                <li class="mr-md-4">
+                                    <i class="zmdi zmdi-money mr-2"></i> <%= train.amount%>
+                                </li>
+                            </ul>
+                            <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
+                                <li class="mr-md-4">
+                                    <i class="zmdi zmdi-time mr-2"></i> <%= train.departuretime.toISOString().slice(11, 16)%>
+                                </li>
+                                <li class="mr-md-4">
+                                  <i class="zmdi zmdi-time mr-2"></i> <%= train.arrivaltime.toISOString().slice(11, 16)%>
+                              </li>
+                            </ul>
+                            <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
+                              <li class="mr-md-4">
+                                  </i> <h6><%= train.seats%> Available Seats</h6>
+                              </li>
+                              
+                          </ul>
+                        </div>
+                    </div>
+                    <div class="job-right my-4 flex-shrink-0">
+                        <div >
+                          <form action="/user/varifybooking" method="post">
+                            <input type="hidden" maxlength="50" class="form-control" id="trainid" name="trainid" aria-describedby="emailHelp" value=<%=train.trainid %> required>
+                            <button type="submit" class="btn d-block w-100 d-sm-inline-block btn-light">Buy Ticket</button><br><br>
+                        </form>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <% }); %>
         </div>
 
 
