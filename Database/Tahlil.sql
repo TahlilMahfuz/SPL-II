@@ -72,6 +72,8 @@ update stuckpassengers set status=status-1 where reservationid = 1
 select * from stuckpassengers;
 select * from reservation;
 select * from trains;
+select * from users;
+select * from fares;
 update reservation set scanned_entertime=now() where reservationid=$1;
 select * from stuckpassengers natural join reservation natural join users where status=0;
 

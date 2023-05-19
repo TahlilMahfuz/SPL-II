@@ -755,7 +755,7 @@ app.get("/admin/addtrain", (req,res) =>{
             );
         }
     );
-})
+});
 app.get("/admin/stuckpassengers", (req,res) =>{
     pool.query(
         `select * from stuckpassengers natural join reservation natural join users where status=0`,
@@ -770,7 +770,11 @@ app.get("/admin/stuckpassengers", (req,res) =>{
             }
         }
     );
-})
+});
+
+app.get("/admin/addbalance", (req,res) =>{
+    res.render('admin/addbalance');
+});
 
 
 
@@ -1123,8 +1127,6 @@ app.post("/admin/deletetrain",async (req,res) =>{
 
 app.post("/admin/release",async (req,res) =>{
     let {reservationid} = req.body;
-    console.log("HI I AM HERE" + reservationid);
-    
     pool.query(
         `update stuckpassengers set status=status+1 where reservationid = $1`,[reservationid],
         (err, results) => {
@@ -1145,6 +1147,24 @@ app.post("/admin/release",async (req,res) =>{
                         }
                     }
                 );
+            }
+        }
+    );
+})
+app.post("/admin/addbalance",async (req,res) =>{
+    let {amount,userphone} = req.body;
+    
+    pool.query(
+        `update users set userbalance=userbalance+$1 where userphone = $2 returning userbalance`,[amount,userphone],
+        (err, results) => {
+            if (err) {
+                throw err;
+            }
+            else{
+                console.log(results);
+                let no_err=[];
+                no_err.push({message:"Account has been recharged"})
+                res.render('admin/addbalance',{results,no_err});
             }
         }
     );
