@@ -1,5 +1,5 @@
 -- SMETRO
-drop table stuckpassangers;
+drop table stuckpassengers;
 drop table reservation;
 drop table users;
 drop table admins;
@@ -38,7 +38,6 @@ CREATE TABLE reservation (
     scanned_entertime timestamp,
     scanned_departuretime timestamp,
     reserve_time date not null default current_timestamp,
-    bookingtoken int,
     FOREIGN KEY (trainid) REFERENCES trains(trainid) on delete set null ,
     FOREIGN KEY (userid) REFERENCES users(userid) on delete set null
 );
@@ -60,15 +59,21 @@ create table fares(
     amount double precision
 );
 
-create table stuckpassangers(
+create table stuckpassengers(
     stuckpassengerid serial primary key,
     reservationID int,
+    status int default 0,
     extraCharge double precision,
     foreign key (reservationID) references reservation(reservationID) on delete set null
 );
 
+
+update stuckpassengers set status=status-1 where reservationid = 1
+select * from stuckpassengers;
 select * from reservation;
 select * from trains;
+update reservation set scanned_entertime=now() where reservationid=$1;
+select * from stuckpassengers natural join reservation natural join users where status=0;
 
 -- Copy only this portion
 

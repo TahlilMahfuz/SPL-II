@@ -654,7 +654,7 @@ app.post('/user/checkValidity', (req, res) => {
                     console.log("Extra charge is: "+extraCharge);
                     
                     pool.query(
-                        `insert into stuckpassangers (reservationID, extraCharge)
+                        `insert into stuckpassengers (reservationID, extraCharge)
                         values($1,$2)`,[result,extraCharge],
                         (err,results)=>{
                             if(err){
@@ -753,6 +753,21 @@ app.get("/admin/addtrain", (req,res) =>{
                     }
                 }
             );
+        }
+    );
+})
+app.get("/admin/stuckpassengers", (req,res) =>{
+    pool.query(
+        `select * from stuckpassengers natural join reservation natural join users where status=0`,
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            
+            else{
+                const resultsArray = Array.from(results.rows);
+                res.render('admin/stuckpassengers',{results});
+            }
         }
     );
 })
@@ -1097,6 +1112,35 @@ app.post("/admin/deletetrain",async (req,res) =>{
                         }
                         else{
                             no_err.push({message:"Train has been deleted"});
+                            res.render('admin/admindashboard',{results,no_err});
+                        }
+                    }
+                );
+            }
+        }
+    );
+})
+
+app.post("/admin/release",async (req,res) =>{
+    let {reservationid} = req.body;
+    console.log("HI I AM HERE" + reservationid);
+    
+    pool.query(
+        `update stuckpassengers set status=status+1 where reservationid = $1`,[reservationid],
+        (err, results) => {
+            if (err) {
+                throw err;
+            }
+            else{
+                let no_err=[];
+                pool.query(
+                    `update reservation set scanned_entertime=now() where reservationid=$1`,[reservationid],
+                    (err,results)=>{
+                        if(err){
+                            throw err;
+                        }
+                        else{
+                            no_err.push({message:"Passenger has been released"});
                             res.render('admin/admindashboard',{results,no_err});
                         }
                     }
