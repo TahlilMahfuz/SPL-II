@@ -360,8 +360,7 @@ app.post("/user/varifybooking",(req,res) =>{
     let subject="Verify your booking";
     sendMail(req.session.user.useremail,token,subject,message);
     let no_err=[];
-    no_err.push({message:"Please provide the booking token sent to your email"});
-    res.render('user/varifybooking',{trainid,no_err});
+    res.render('user/varifybooking',{trainid});
 });
 
 app.post("/user/confirmbook",async (req,res) =>{
