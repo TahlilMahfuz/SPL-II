@@ -265,6 +265,10 @@
                                                             </ul>
                                                             <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
                                                                 <li class="mr-md-4">
+                                                                    <i class="fas fa-calendar"></i>
+                                                                    <%= train.departuredate.toISOString().slice(0, 10)%>
+                                                                </li>
+                                                                <li class="mr-md-4">
                                                                     <i class="zmdi zmdi-time mr-2"></i>
                                                                     <%= train.departuretime.toISOString().slice(11, 16)%>
                                                                 </li>
@@ -272,6 +276,7 @@
                                                                     <i class="zmdi zmdi-time mr-2"></i>
                                                                     <%= train.arrivaltime.toISOString().slice(11, 16)%>
                                                                 </li>
+                                                                
                                                             </ul>
                                                             <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
                                                                 <li class="mr-md-4">
@@ -290,9 +295,7 @@
                                                                 <input type="hidden" maxlength="50" class="form-control" id="trainid"
                                                                     name="trainid" aria-describedby="emailHelp" value=<%=train.trainid
                                                                     %> required>
-                                                                <button type="submit"
-                                                                    class="btn d-block w-100 d-sm-inline-block btn-light">Buy
-                                                                    Ticket</button><br><br>
+                                                            <button type="submit" class="btn d-block w-100 d-sm-inline-block btn-success" style="border-radius: 50px;">Buy Ticket</button>
                                                             </form>
                                                         </div>
                                                     </div>
