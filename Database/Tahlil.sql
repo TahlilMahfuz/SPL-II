@@ -88,6 +88,40 @@ select * from stuckpassengers natural join reservation natural join users where 
 
 -- These are the rough. Dont copy them to database
 
+update reservation
+set availability=4 and
+where reservationid=$1;
+
+update users
+set userbalance=userbalance+$2
+where userid=$3;
+
+update trains
+set seats=seats+1
+where trainid=$1;
+
+select availability
+from reservation
+where reservationid=1
+
+
+
+SELECT reservationid, amount, departuretime, DATE_PART('day', departuretime - current_date) AS remainingtimeindays,userid,trainid
+      FROM reservation
+      NATURAL JOIN fares
+      NATURAL JOIN trains
+      WHERE fares.destination = trains.destination
+      AND fares.departure = trains.departure
+      AND reservationid = 1
+
+SELECT reservationid, amount, departuretime,departuretime- current_date AS remainingtimeindays
+      FROM reservation
+      NATURAL JOIN fares
+      NATURAL JOIN trains
+      WHERE fares.destination = trains.destination
+      AND fares.departure = trains.departure
+      AND reservationid = 1
+
 insert into nidrecord values ('123');
 
 update reservation set availability=2 where reservationid=6;

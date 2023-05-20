@@ -2,32 +2,70 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <%-include('../partials/header') %>
+    <title>Refund Portal</title>
+    <style>
+      .bg-image {
+        background-image: url('../img/metro4.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100vh;
+      }
+      .mask {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+      </style>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-    <title>Varify Booking</title>
 </head>
 
 <body>
-    <%-include('../partials/navlogged') %>
-    <div class="container my-4">
-        <form action="/user/confirmbook" method="post">
-            
-            <div class="form-group">
-                <label for="token">Varification Code</label>
-                <input type="text" maxlength="23" class="form-control" id="token" name="token" required>
-
-                <input type="hidden" maxlength="20" class="form-control" id="trainid" name="trainid" value=<%=trainid%>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Varify</button><br><br>
-        </form>
+  
+  <%-include('../partials/navlogged') %>
+  <div id="intro-example" class="p-5 text-center bg-image">
+    <div class="mask" style="background-color: rgba(0, 0, 0, 0.7)">
+      <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="text-white">
+          <h1 class="mb-3">Refund Ticket</h1>
+          <%if(typeof no_err != 'undefined'){
+            no_err.forEach(no_err => {
+                %>
+                <h5 class="mb-4">
+                    <%= no_err.message %>
+                </h5> 
+                <%
+            }) %>
+            <%
+                delete no_err;
+            } %>
+        
+            <%if(typeof error != 'undefined'){
+                error.forEach(error => {
+                    %>
+                        <h5 class="mb-4">
+                            <%= error.message %>
+                        </h5>       
+                    <%
+                }) %>
+            <%
+                delete error;
+            } %>
+  
+          <a class="btn btn-outline-light btn-lg m-2" href="/user/dashboard" target="_blank" role="button">Return to dashboard</a>
+        </div>
+      </div>
     </div>
+  </div>
+  
+<!--Background image  -->
+      
+
+
+    <%-include('../partials/footer') %>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
