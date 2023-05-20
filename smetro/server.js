@@ -190,10 +190,26 @@ app.post("/user/usersignup",async (req,res) =>{
                                 res.render("user/usersignup",{error});
                             }
                             else{
-                                let message="Your otp varification code is ";
-                                let subject="Verify your account";
-                                sendMail(useremail,userotp,subject,message);
-                                res.render('user/register',{username,usernid,useremail,userphone,userpassword,userotp});
+                                pool.query(
+                                    `select * from nidrecord where nid=$1`,[usernid],
+                                    (err,results)=>{
+                                        if(err){
+                                            throw err;
+                                        }
+                        
+                                        if(results.rows.length>0){
+                                            let message="Your otp varification code is ";
+                                            let subject="Verify your account";
+                                            sendMail(useremail,userotp,subject,message);
+                                            res.render('user/register',{username,usernid,useremail,userphone,userpassword,userotp});
+                                        }
+                                        else{
+                                            
+                                            error.push({message: "Invalid NID"});
+                                            res.render("user/usersignup",{error});
+                                        }
+                                    }
+                                );
                             }
                         }
                     );
@@ -552,7 +568,7 @@ app.post("/user/showqr",(req,res) =>{
         }
     );
     
-})
+});
 
 
 
@@ -688,6 +704,149 @@ app.post('/user/checkValidity', (req, res) => {
         }
     );
 });
+app.post("/user/refundticket", (req, res) => {
+    let { refundid } = req.body;
+    console.log("refund id is: " + refundid);
+    pool.query(
+        `select availability
+        from reservation
+        where reservationid=$1`,[refundid],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            else{  
+                const { availability } = results.rows[0];
+                if(availability>1){
+                    pool.query(
+                        `SELECT DISTINCT departure FROM fares`,
+                        (err, results) => {
+                          if (err) {
+                            throw err;
+                          }
+                          else{
+                            let error = [];
+                            error.push({ message: "Sorry! You cannot refund your ticket." });
+                            const resultsArray = Array.from(results.rows);
+                            res.render('user/dashboard', { results: resultsArray, error });
+                         }
+                        }
+                    );
+                }
+            }
+        }
+    );
+    pool.query(
+      `SELECT reservationid, amount, departuretime, DATE_PART('day', departuretime - current_date) AS remainingtimeindays,userid,trainid
+      FROM reservation
+      NATURAL JOIN fares
+      NATURAL JOIN trains
+      WHERE fares.destination = trains.destination
+      AND fares.departure = trains.departure
+      AND reservationid = $1`,
+      [refundid],
+      (err, results) => {
+        if (err) {
+          throw err;
+        } 
+        else {
+          // Extract and print remaining time in days for the first row
+          if (results.rows.length > 0) {
+            const { userid,reservationid, remainingtimeindays, amount,trainid } = results.rows[0];
+  
+            console.log("Remaining days are: " + remainingtimeindays);
+  
+            if (remainingtimeindays >= 2) {
+              const refundamount = amount - (amount * 50) / 100;
+              const notice = {
+                message: `Only 50% ticket amount that is Tk. ${refundamount} would be refunded. Are you sure you want to apply for the refund?`
+              };
+              res.render('user/refundticket', { reservationid, refundamount, notice ,userid,trainid});
+            } else if (remainingtimeindays == 1) {
+              const refundamount = amount - (amount * 70) / 100;
+              const notice = {
+                message: `Only 30% ticket amount that is Tk. ${refundamount} would be refunded. Are you sure you want to apply for the refund?`
+              };
+              res.render('user/refundticket', { reservationid, refundamount, notice ,userid,trainid});
+            }
+            else {
+              pool.query(
+                `SELECT DISTINCT departure FROM fares`,
+                (err, results) => {
+                  if (err) {
+                    throw err;
+                  }
+                  let error = [];
+                  error.push({ message: "Sorry! You cannot refund your ticket." });
+                  const resultsArray = Array.from(results.rows);
+                  res.render('user/dashboard', { results: resultsArray, error });
+                }
+              );
+            }
+          }
+        }
+      }
+    );
+  }
+);
+
+app.post("/user/processrefund",(req,res) =>{
+    let {reservationid,refundamount,userid,trainid}=req.body;
+    console.log(reservationid,refundamount,userid,trainid);
+    pool.query(
+        `update reservation
+        set availability=4
+        where reservationid=$1`,[reservationid],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            else{  
+                pool.query(
+                    `update users
+                    set userbalance=userbalance+$2
+                    where userid=$1`,[userid,refundamount],
+                    (err,results)=>{
+                        if(err){
+                            throw err;
+                        }
+                        else{  
+                            pool.query(
+                                `update trains
+                                set seats=seats+1
+                                where trainid=$1`,[trainid],
+                                (err,results)=>{
+                                    if(err){
+                                        throw err;
+                                    }
+                                    else{  
+                                        pool.query(
+                                            `SELECT DISTINCT departure FROM fares`,
+                                            (err, results) => {
+                                              if (err) {
+                                                throw err;
+                                              }
+                                              let no_err = [];
+                                              no_err.push({ message: "Ticket has been refunded" });
+                                              const resultsArray = Array.from(results.rows);
+                                              res.render('user/dashboard', { results: resultsArray, no_err });
+                                            }
+                                          );
+                                    }
+                                }
+                            );
+                        }
+                    }
+                );
+            }
+        }
+    );
+    
+});
+
+
+  
+  
 
 
 
