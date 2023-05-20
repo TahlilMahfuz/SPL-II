@@ -1357,6 +1357,35 @@ app.post("/admin/release",async (req,res) =>{
 })
 app.post("/admin/addbalance",async (req,res) =>{
     let {amount,userphone} = req.body;
+    pool.query(
+        `select * from users where userphone=$1`,[userphone],
+        (err, results) => {
+            if (err) {
+                throw err;
+            }
+            else if(results.rows.length>0){
+                pool.query(
+                    `update users set userbalance=userbalance+$1 where userphone = $2 returning userbalance`,[amount,userphone],
+                    (err, results) => {
+                        if (err) {
+                            throw err;
+                        }
+                        else{
+                            console.log(results);
+                            let no_err=[];
+                            no_err.push({message:"Account has been recharged"})
+                            res.render('admin/addbalance',{results,no_err});
+                        }
+                    }
+                );
+            }
+            else{
+                let error=[];
+                error.push({message:"No user exists with this Phone number"});
+                res.render('admin/addbalance',{error});
+            }
+        }
+    );
     
     pool.query(
         `update users set userbalance=userbalance+$1 where userphone = $2 returning userbalance`,[amount,userphone],

@@ -9,138 +9,60 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-    <title>Admin Dashboard</title>
-    <%-include('../partials/header') %>
+    
+        <%-include('../partials/header') %>
+    <title>Admin signUp</title>
 </head>
 
 <body>
-    <section class="vh-1000" style="background-image: url('../img/metro4.jpg'); 
-            background-size: cover; background-position: center; margin-top: -10px;">
-            <%-include('../partials/navadmin') %>
-            
-            <h1 class="mb-3 text-white text-center" style="margin-top: 50px;">Available Tickets</h1>
+    <%-include('../partials/nav') %>
 
-            <div class="container py-5 h-100" style="max-width: 90%">
-                <div class="row d-flex justify-content-center h-100">
-                <div class="col col-xl-10">
-
-
-
-
-
-
-                <!-- Paste rest of the code -->
-                <div class="container my-4">
-                    <div class="jumbotron">
-            
-                        <h1 class="text-center">Add route fare</h1>
-                        <form action="/admin/addroute" method="post">
-                
-                            <div class="form-row">
-                                <div class="col">
-                                    <label for="departure">From:</label>
-                                    <input type="text" maxlength="20" class="form-control" id="departure" name="departure" required>
-                                </div>
-                                <div class="col">
-                                    <label for="destination">To:</label>
-                                    <input type="text" maxlength="20" class="form-control" id="destination" name="destination" required>
-                                </div>
-                            </div>
-                              <br>
-                              <div class="form-row">
-                                  <div class="col">
-                                    <label for="amount">Amount</label>
-                                    <input type="text" class="form-control" id="amount" name="amount" required>
-                                  </div>
-                              </div>
-                              <br>
-                    
-                            <button type="submit" class="btn btn-success">Add Route Fare</button><br><br>
-                        </form>
-                    </div>
-            
-                    
-            
-            
-            
-            
-            
-                    
-                    
-                    <div class="card shadow mb-4 my-2">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-info text-center">Fare List</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Fare ID</th>
-                                            <th>From</th>
-                                            <th>To</th>
-                                            <th>Fare</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% results.rows.forEach(function(data) { %>
-                                            <tr>
-                                                <td>
-                                                    <%= data.fareid %>
-                                                </td>
-                                                <td>
-                                                    <%= data.departure %>
-                                                </td>
-                                                <td>
-                                                    <%= data.destination %>
-                                                </td>
-                                                <td>
-                                                    <%= data.amount %>
-                                                </td>
-                                                <td>
-                                                    <form action="/admin/deletefare" method="post">
-                                                        <input type="hidden" maxlength="50" class="form-control" 
-                                                        id="deletefare" name="deletefare" aria-describedby="emailHelp" value=<%=data.fareid %> required>
-                                                        <button type="submit" class="btn btn-danger">Delete</button><br><br>
-                                                    </form>
-                                                    
-                                                </td>
-                                            </tr>
-                                        <% }); %>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-            
-            
-            
-            
-            
-            
-                </div>
-                <!-- Paste rest of the code -->
-
-
-
-
-
-
-
-
-                
-              </div>
+    <div class="container my-4">
+        <h1 class="text-center">Signup to SMetro As admin</h1>
+        <form action="/admin/adminsignup" method="post">
+            <div class="form-group">
+                <label for="masterkey">Master Key</label>
+                <input type="password" maxlength="20" class="form-control" id="masterkey" name="masterkey"
+                    aria-describedby="emailHelp" required>
             </div>
-          </div>
-        </section>
-      </div>
+            <div class="form-group">
+                <label for="adminname">Admin name</label>
+                <input type="text" maxlength="20" class="form-control" id="adminname" name="adminname"
+                    aria-describedby="emailHelp" placeholder="Not email" required>
+            </div>
 
+            <div class="form-group">
+                <label for="adminnid">NID</label>
+                <input type="text" maxlength="20" class="form-control" id="adminnid" name="adminnid"
+                    aria-describedby="emailHelp" placeholder="" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" maxlength="50" class="form-control" id="adminemail" name="adminemail"
+                    aria-describedby="emailHelp" required>
+            </div>
+
+            <div class="form-group">
+                <label for="adminphone">phone</label>
+                <input type="tel" class="form-control" id="phone" name="adminphone" maxlength="11" pattern="[0-9]{11}" placeholder="01XXXXXXXXX(Use only digits)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="adminpassword">Password</label>
+                <input type="password" maxlength="23" class="form-control" id="adminpassword" name="adminpassword" required>
+            </div>
+            <div class="form-group">
+                <label for="cadminpassword">Confirm Password</label>
+                <input type="password" maxlength="23" class="form-control" id="cadminpassword" name="cadminpassword" required>
+                <small id="emailHelp" class="form-text text-muted">Make sure to type the same password</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">SignUp</button><br><br>
+        </form>
+    </div>
     <%-include('../partials/footer') %>
-    
 
-    
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
