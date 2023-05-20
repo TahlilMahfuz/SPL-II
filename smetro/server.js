@@ -1336,8 +1336,18 @@ app.post("/admin/release",async (req,res) =>{
                             throw err;
                         }
                         else{
-                            no_err.push({message:"Passenger has been released"});
-                            res.render('admin/admindashboard',{results,no_err});
+                            pool.query(
+                                `select * from stuckpassengers natural join reservation natural join users where status=0`,
+                                (err,results)=>{
+                                    if(err){
+                                        throw err;
+                                    }
+                                    else{
+                                        no_err.push({message:"Passenger has been released"});
+                                        res.render('admin/stuckpassengers',{results,no_err});
+                                    }
+                                }
+                            );
                         }
                     }
                 );
