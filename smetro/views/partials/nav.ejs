@@ -15,6 +15,32 @@
     .navbar-nav .nav-item.active {
         margin-left: 28px;
     }
+    .modal-header-warning {
+	color:#fff;
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #f0ad4e;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+    }
+    .modal-header-success {
+    color: #fff;
+    padding: 9px 15px;
+    border-bottom: 1px solid #eee;
+    background-color: #28a745;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    }
+
+
 </style>
 
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark">
@@ -66,64 +92,65 @@
 
 <% if (typeof error !== 'undefined') {
     error.forEach((error) => { %>
-        <div class="modal fade show" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+
+        <div class="modal fade" id="warning" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="errorModalLabel">Sorry!</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <div class="modal-header modal-header-warning">
+                        <h1><i class="glyphicon glyphicon-thumbs-up"></i>Warning!</h1>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
                         <%= error.message %>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                     </div>
-                </div>
-            </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
         </div>
         <script>
             $(document).ready(function () {
-                $('#errorModal').modal('show');
+                $('#warning').modal('show');
                 setTimeout(function () {
-                    $('#errorModal').modal('hide');
+                    $('#warning').modal('hide');
                 }, 3000);
             });
-        </script>
+        </script>        
     <% });
     delete error;
 } %>
 
 <% if (typeof no_err !== 'undefined') {
     no_err.forEach((no_err) => { %>
-        <div class="modal fade show" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+        <div class="modal fade" id="success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">Success!</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <div class="modal-header modal-header-success">
+                        <h1><i class="glyphicon glyphicon-thumbs-up"></i> Success!</h1>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                     </div>
                     <div class="modal-body">
                         <%= no_err.message %>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+
                     </div>
-                </div>
-            </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
         </div>
+        
         <script>
             $(document).ready(function () {
-                $('#successModal').modal('show');
+                $('#success').modal('show');
                 setTimeout(function () {
-                    $('#successModal').modal('hide');
+                    $('#success').modal('hide');
                 }, 3000);
             });
         </script>
+            
+        
     <% });
     delete no_err;
 } %>
