@@ -77,7 +77,7 @@ create table stuckpassengers(
 
 update stuckpassengers set status=status-1 where reservationid = 1
 select * from stuckpassengers;
-select * from reservation;
+select * from reservation order by reservationid asc;
 select * from trains;
 select * from users;
 select * from fares;
@@ -87,6 +87,9 @@ select * from stuckpassengers natural join reservation natural join users where 
 -- Copy only this portion
 
 -- These are the rough. Dont copy them to database
+select reservationid,trainname,departuretime,arrivaltime,departure,destination,departuredate
+from users natural join reservation natural join trains natural join fares
+where userid=2;
 
 update reservation
 set availability=4 and
