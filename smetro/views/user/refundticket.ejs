@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%-include('../partials/header') %>
+    <title>Refund Portal</title>
+    <style>
+      .bg-image {
+        background-image: url('../img/metro4.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100vh;
+      }
+      .mask {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+      </style>
+
+</head>
+
+<body>
+  
+  <%-include('../partials/navlogged') %>
+  <div id="intro-example" class="p-5 text-center bg-image">
+    <div class="mask" style="background-color: rgba(0, 0, 0, 0.7)">
+      <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="text-white">
+          <h1 class="mb-3">Refund Ticket</h1>
+          <h5 class="mb-4">
+            <%= notice.message %>
+          </h5>
+  
+          <form action="/user/processrefund" method="post">
+            <input type="hidden" maxlength="50" class="form-control" id="reservationid" name="reservationid" value=<%= reservationid %> required>
+            <input type="hidden" maxlength="50" class="form-control" id="refundamount" name="refundamount" value=<%= refundamount %> required>
+            <input type="hidden" maxlength="50" class="form-control" id="userid" name="userid" value=<%= userid %> required>
+            <input type="hidden" maxlength="50" class="form-control" id="trainid" name="trainid" value=<%= trainid %> required>
+            <button class="btn btn-outline-light btn-lg m-2" type="submit">Yes! Refund</button>
+          </form>
+  
+          <a class="btn btn-outline-light btn-lg m-2" href="/user/dashboard" target="_blank" role="button">No! Don't Refund</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<!--Background image  -->
+      
+
+
+    <%-include('../partials/footer') %>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>
