@@ -2,6 +2,8 @@
 <html lang="en">
 
 <head>
+    <%-include('../partials/header') %>
+
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,89 +21,184 @@
     <title>QR Scanner</title>
 
 <body>
-    <%-include('../partials/navlogged') %>
-    <br><br>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js"
-        integrity="sha512-k/KAe4Yff9EUdYI5/IAHlwUswqeipP+Cp5qnrsUjTPCgl51La2/JhyyjNciztD7mWNKLSXci48m7cctATKfLlQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <style>
-        main {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
 
-        #reader {
-            width: 600px;
-        }
 
-        #result {
-            text-align: center;
-            font-size: 1.5rem;
-        }
-    </style>
-    <main>
-        <div id="reader"></div>
-        <div id="result"></div>
-    </main>
-    <script>
-        const scanner = new Html5QrcodeScanner("reader", {
-            qrbox: {
-                width: 250,
-                height: 250,
-            },
-            fps: 20,
-        });
-        scanner.render(success, error);
-        function success(result) {
-            result = result.replace(/"/g, '');
-            // send the result to the server
-            fetch('/api/scan', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ result: result })
-            })
-            .then(response => response.json())
-            .then(data =>{
-                console.log(data);
-                window.location.replace('/user/dashboard');
-            })
-            .catch(error => console.error(error));
+    <section class="vh-100" style="background-image: url('../img/metro4.jpg'); 
+            background-size: cover; background-position: center; margin-top: -10px;">
+            <%-include('../partials/navlogged') %>
+            
+            <h1 class="mb-3 text-white text-center" style="margin-top: 50px;">Scan your Ticket QR</h1>
 
-            document.getElementById("result").innerHTML = `
-                <h2>Checking Your Ticket.</h2>
-                <form id="redirect-form" method="POST" action="/user/checkValidity">
-                    <input type="hidden" name="result" value="${result}">
-                    <button type="submit" id="redirect-button" style="display: none;">Redirecting...</button>
-                </form>
-                <p>Redirecting in 5 seconds...</p>
-            `;
+            <div class="container py-5 h-100" style="max-width: 90%">
+                <div class="row d-flex justify-content-center h-100">
+                <div class="col col-xl-10">
 
-            setTimeout(() => {
-                document.getElementById("redirect-button").click();
-            }, 5000);
 
-            scanner.clear();
-            document.getElementById("reader").remove();
-        }
-        function error(err) {
-            console.error(err);
-        }
-    </script>
 
-    <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
-            </script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-            </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
-            </script>
+
+
+
+                <!-- Paste rest of the code -->
+                <br><br>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.4/html5-qrcode.min.js"
+                    integrity="sha512-k/KAe4Yff9EUdYI5/IAHlwUswqeipP+Cp5qnrsUjTPCgl51La2/JhyyjNciztD7mWNKLSXci48m7cctATKfLlQ=="
+                    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+                <style>
+                    main {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+            
+                    #reader {
+                        width: 600px;
+                    }
+            
+                    #result {
+                        text-align: center;
+                        font-size: 1.5rem;
+                    }
+                    #html5-qrcode-button-camera-stop {
+                display: inline-block;
+                padding: 8px 16px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                }
+
+                #html5-qrcode-button-camera-stop:hover {
+                background-color: #0056b3;
+                }
+
+                #html5-qrcode-button-camera-stop:focus {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+                }
+                #html5-qrcode-button-camera-start {
+                display: inline-block;
+                padding: 8px 16px;
+                background-color: #28a745;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                }
+
+                #html5-qrcode-button-camera-start:hover {
+                background-color: #1e7e34;
+                }
+
+                #html5-qrcode-button-camera-start:focus {
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.5);
+                }
+                </style>
+                
+                <main>
+                    <div id="reader"></div>
+                    <div id="result"></div>
+                </main>
+            
+                <script>
+                    const scanner = new Html5QrcodeScanner("reader", {
+                        qrbox: {
+                            width: 250,
+                            height: 250,
+                        },
+                        fps: 20,
+                    });
+                    scanner.render(success, error);
+                    function success(result) {
+                        result = result.replace(/"/g, '');
+                        // send the result to the server
+                        fetch('/api/scan', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ result: result })
+                        })
+                        .then(response => response.json())
+                        .then(data =>{
+                            console.log(data);
+                            window.location.replace('/user/dashboard');
+                        })
+                        .catch(error => console.error(error));
+            
+                        document.getElementById("result").innerHTML = `
+                            <h2>Checking Your Ticket.</h2>
+                            <form id="redirect-form" method="POST" action="/user/checkValidity">
+                                <input type="hidden" name="result" value="${result}">
+                                <button type="submit" id="redirect-button" style="display: none;">Redirecting...</button>
+                            </form>
+                            <p>Redirecting in 5 seconds...</p>
+                        `;
+            
+                        setTimeout(() => {
+                            document.getElementById("redirect-button").click();
+                        }, 5000);
+            
+                        scanner.clear();
+                        document.getElementById("reader").remove();
+                    }
+                    function error(err) {
+                        console.error(err);
+                    }
+                </script>
+            
+                <!-- Optional JavaScript -->
+                    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+                    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+                        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+                        </script>
+                    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+                        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+                        </script>
+                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+                        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+                        </script>
+                <!-- Paste rest of the code -->
+
+
+
+
+
+
+
+
+                
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+        <%-include('../partials/footer') %>
+
+
+
+
+    
+
+
+
 </body>
 
 
