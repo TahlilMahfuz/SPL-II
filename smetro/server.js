@@ -137,6 +137,31 @@ app.get("/user/scanqr", async (req,res) => {
 app.get("/test", async (req,res) => {
     res.render('test');
 });
+app.get("/user/prevtickets", async (req,res) => {
+    let userid=req.session.user.userid;
+    console.log("Userid here is: "+userid);
+    pool.query(
+        `select reservationid,trainname,departuretime,arrivaltime,departure,destination,departuredate
+        from users natural join reservation natural join trains natural join fares
+        where userid=$1;`,[userid],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            else if(results.rows.length>0){
+                console.log(results);
+                const resultsArray = Array.from(results.rows);
+                res.render('user/prevtickets',{results});
+            }
+            else{
+                let error=[];
+                const resultsArray = Array.from(results.rows);
+                error.push({message:"You didn't buy any ticket before."})
+                res.render('user/prevtickets',{results,error});
+            }
+        }
+    );
+});
 
 
 
@@ -673,7 +698,7 @@ app.post('/user/checkValidity', (req, res) => {
                             }
                             else{  
                                 let error=[];
-                                error.push({message:"You have some penalty charges("+extraCharge+") pending for staying too long in the station. Please contact our customer service booth kindly to pay the dues."});
+                                error.push({message:"You have some penalty charges("+extraCharge.toFixed(2)+") pending for staying too long in the station. Please contact our customer service booth kindly to pay the dues."});
                                 res.render('user/doorSystem',{error});
                             }
                         }
