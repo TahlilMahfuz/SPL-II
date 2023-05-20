@@ -15,33 +15,63 @@
     
 </head>
 <body>
-    <%-include('../partials/navadmin') %>
+    <section class="vh-1000" style="background-image: url('../img/metro4.jpg'); 
+            background-size: cover; background-position: center; margin-top: -10px;">
+            <%-include('../partials/navadmin') %>
+            
+            <h1 class="mb-3 text-white text-center" style="margin-top: 50px;">Available Tickets</h1>
 
-    <div class="container my-5">
-        <div class="jumbotron">
-            <h1 class="text-center">Add route fare</h1>
-            <form action="/admin/addbalance" method="post">
-    
-                <div class="form-row">
-                    <div class="col">
-                        <label for="userphone">Userphone</label>
-                        <input type="text" class="form-control" id="userphone" name="userphone" required>
-                      </div>
+            <div class="container py-5 h-100" style="max-width: 90%">
+                <div class="row d-flex justify-content-center h-100">
+                <div class="col col-xl-10">
+
+
+
+
+
+
+                <!-- Paste rest of the code -->
+                <div class="container my-5  ">
+                    <div class="jumbotron">
+                        <h1 class="text-center">Add route fare</h1>
+                        <form action="/admin/addbalance" method="post">
+                
+                            <div class="form-row">
+                                <div class="col">
+                                    <label for="userphone">Userphone</label>
+                                    <input type="text" class="form-control" id="userphone" name="userphone" required>
+                                  </div>
+                            </div>
+                              <br>
+                              <div class="form-row">
+                                  <div class="col">
+                                    <label for="amount">Amount</label>
+                                    <input type="text" class="form-control" id="amount" name="amount" required>
+                                  </div>
+                              </div>
+                              <br>
+                    
+                            <button type="submit" class="btn btn-success">Recharge</button><br><br>
+                        </form>
+                    </div>
+            
                 </div>
-                  <br>
-                  <div class="form-row">
-                      <div class="col">
-                        <label for="amount">Amount</label>
-                        <input type="text" class="form-control" id="amount" name="amount" required>
-                      </div>
-                  </div>
-                  <br>
-        
-                <button type="submit" class="btn btn-success">Recharge</button><br><br>
-            </form>
-        </div>
+                <!-- Paste rest of the code -->
 
-    </div>
+
+
+
+
+
+
+
+                
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    
 
     <%-include('../partials/footer') %>
     
