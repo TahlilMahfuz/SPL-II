@@ -246,7 +246,7 @@
                                                 <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
                                                     <div class="job-content">
                                                         <ul>
-                                                          <h5 class="text-center text-md-left"><%= data.reservationid %></h5>
+                                                          <h5 class="text-center text-md-left">Reservation ID: <%= data.reservationid %></h5>
                                                         </ul>
                                                         <ul>
                                                             <h5 class="text-center text-md-left"><%= data.trainname %></h5>
@@ -258,11 +258,12 @@
                                                             <li class="mr-md-4">
                                                                 <i class="zmdi zmdi-pin mr-2"></i> <%= data.destination %>
                                                             </li>
-                                                            <li class="mr-md-4">
-                                                                <i class="zmdi zmdi-time mr-2"></i> <%= data.departuredate.toISOString().slice(0, 10)%>
-                                                            </li>
+                                                            
                                                         </ul>
                                                         <ul class="d-md-flex flex-wrap text-capitalize ff-open-sans">
+                                                            <li class="mr-md-4">
+                                                                <i class="fas fa-calendar"></i> <%= data.departuredate.toISOString().slice(0, 10)%>
+                                                            </li>
                                                             <li class="mr-md-4">
                                                                 <i class="zmdi zmdi-time mr-2"></i> <%= data.departuretime.toISOString().slice(11, 16)%>
                                                             </li>
@@ -280,7 +281,9 @@
                                                         <div >
                                                           <form action="/user/showqr" method="post">
                                                             <input type="hidden" maxlength="50" class="form-control" id="reservationid" name="reservationid" aria-describedby="emailHelp" value=<%=data.reservationid %> required>
-                                                            <button type="submit" class="btn d-block w-100 d-sm-inline-block btn-light">Generate Ticket</button><br><br>
+                                                            <button type="submit" class="btn d-block w-100 d-sm-inline-block btn-success" style="border-radius: 50px;">Generate Ticket</button>
+
+
                                                         </form>
                                                         </div>
                                                     </div>
@@ -292,7 +295,8 @@
                                                         <form action="/user/refundticket" method="post">
                                                           <input type="hidden" maxlength="50" class="form-control" id="refundid" name="refundid" aria-describedby="emailHelp"
                                                            value=<%=data.reservationid %> required>
-                                                          <button type="submit" class="btn d-block w-100 d-sm-inline-block btn-light">Refund Ticket</button><br><br>
+                                                           <button type="submit" class="btn d-block w-100 d-sm-inline-block btn-warning" style="border-radius: 50px;">Refund</button>
+
                                                       </form>
                                                       </div>
                                                     </div>
