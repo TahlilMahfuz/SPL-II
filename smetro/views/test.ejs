@@ -10,68 +10,46 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>SignUp</title>
+    <title>Add Balance</title>
 </head>
 
 <body>
-    <%-include('../partials/nav') %>
-    <%if(typeof error != 'undefined'){
-        error.forEach(error => {
-            %>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>Sorry!</strong> <%=error.message%>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <%
-        }) %>
-        <%
-        delete error;
-        delete no_err;
-    } %>
-
-    <%if(typeof no_err != 'undefined'){
-        no_err.forEach(no_err => {
-            %>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>Success!</strong> <%=no_err.message%>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <%
-        }) %>
-        <%
-        delete no_err;
-    } %>
+    <%-include('../partials/navadmin') %>
 
     <div class="container my-4">
-        <h3 class="text-center">An email would be send to your provided email <%=useremail%>.
-            Please provide the otp for sign up.</h3>
-        <form action="/user/register" method="post">
-            
-            <div class="form-group">
-                <label for="uservarcode">Varification Code</label>
-                <input type="text" maxlength="23" class="form-control" id="userotp" name="uservarcode" required>
+        <div class="jumbotron">
+            <a href="/admin/admindashboard"><button type="button" class="btn btn-secondary my-2">Add a route and fare</button></a>
+            <a href="/admin/addtrain"><button type="button" class="btn btn-secondary my-2">Add a train</button></a>
+            <a href="/admin/stuckpassengers"><button type="button" class="btn btn-secondary my-2">Stuck Passengers</button></a>
+            <a href="/admin/addbalance"><button type="button" class="btn btn-secondary my-2">Add Balance</button></a>
 
-                <input type="hidden" maxlength="20" class="form-control" id="username" name="username" value=<%=username%>
-                    aria-describedby="emailHelp" placeholder="Not email" required>
-                <input type="hidden" maxlength="20" class="form-control" id="usernid" name="usernid" value=<%=usernid%>
-                    aria-describedby="emailHelp" placeholder="" required>
-                <input type="hidden" maxlength="50" class="form-control" id="useremail" name="useremail" value=<%=useremail%>
-                    aria-describedby="emailHelp" required>
-                <input type="hidden" class="form-control" id="phone" name="userphone" value=<%=userphone%>
-                    maxlength="11" pattern="[0-9]{11}" placeholder="01XXXXXXXXX(Use only digits)" required>
-                <input type="hidden" maxlength="23" class="form-control" id="userpassword" name="userpassword" 
-                value=<%=userpassword%> required>
-                <input type="hidden" maxlength="23" class="form-control" id="userotp" name="userotp" 
-                value=<%=userotp%> required>
-            </div>
+            <h1 class="text-center">Add route fare</h1>
+            <form action="/admin/addbalance" method="post">
+    
+                <div class="form-row">
+                    <div class="col">
+                        <label for="userphone">Userphone</label>
+                        <input type="text" class="form-control" id="userphone" name="userphone" required>
+                      </div>
+                </div>
+                  <br>
+                  <div class="form-row">
+                      <div class="col">
+                        <label for="amount">Amount</label>
+                        <input type="text" class="form-control" id="amount" name="amount" required>
+                      </div>
+                  </div>
+                  <br>
+        
+                <button type="submit" class="btn btn-success">Recharge</button><br><br>
+            </form>
+        </div>
 
-            <button type="submit" class="btn btn-primary">SignUp</button><br><br>
-        </form>
     </div>
+
+    
+
+    
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
