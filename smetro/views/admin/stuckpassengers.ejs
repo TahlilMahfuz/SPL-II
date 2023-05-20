@@ -11,6 +11,7 @@
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <title>Stuck Passengers</title>
+    <%-include('../partials/header') %>
 </head>
 
 <body>
@@ -18,14 +19,6 @@
 
     <div class="container my-4">
         <div class="jumbotron">
-            <a href="/admin/admindashboard"><button type="button" class="btn btn-secondary my-2">Add a route and fare</button></a>
-            <a href="/admin/addtrain"><button type="button" class="btn btn-secondary my-2">Add a train</button></a>
-            <a href="/admin/stuckpassengers"><button type="button" class="btn btn-secondary my-2">Stuck Passengers</button></a> 
-            <a href="/admin/addbalance"><button type="button" class="btn btn-secondary my-2">addbalance</button></a>
-            
-            
-            
-            
             <h1 class="text-center">Due payments</h1>
             <div class="card shadow mb-4 my-2">
                 <div class="card-header py-3">
@@ -55,7 +48,7 @@
                                             <%= data.userphone %>
                                         </td>
                                         <td>
-                                            <%= data.extracharge %>
+                                            <%= data.extracharge.toFixed(2) %>
                                         </td>
                                         <td>
                                             <form action="/admin/release" method="post">
@@ -81,6 +74,7 @@
 
     </div>
 
+    <%-include('../partials/footer') %>
     
 
     
