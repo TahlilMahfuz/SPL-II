@@ -177,6 +177,10 @@ app.get("/user/userprofile", async (req,res) => {
         }
     );
 });
+app.get("/user/forgetpassword", async (req,res) => {
+    res.render('user/forgetpassword');
+});
+
 
 
 
@@ -191,6 +195,66 @@ app.get("/user/userprofile", async (req,res) => {
 
 
 //POST METHODS
+app.post("/user/forgotemail", async (req,res) => {
+    let {femail}=req.body;
+    pool.query(
+        `select * from users where useremail=$1`,[femail],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            else if(results.rows.length>0){
+                const userotp = Math.floor(1000 + Math.random() * 9000);
+                let message="Your otp varification code is ";
+                let subject="Verify your account";
+                sendMail(femail,userotp,subject,message);
+                res.render('user/checkemailforgot',{femail,userotp});                          
+            }
+            else{
+                let error=[];
+                error.push({message:"Email doesn't exist. You can register."});
+                res.render('user/userlogin',{error});
+            }
+        }
+    );
+});
+app.post("/user/checkemailforgot", async (req,res) => {
+    let {femail,userotp,inputtedvarcode}=req.body;
+    console.log("Fmail, userotp, inputtedvarcode: "+ femail +userotp+inputtedvarcode);
+    if(userotp==inputtedvarcode){
+        res.render('user/updatepassword',{femail,userotp,inputtedvarcode});
+    }
+    else{
+        let error=[];
+        error.push({message:"Invalid Varification code."});
+        res.render('user/userlogin',{error});
+    }
+
+});
+app.post("/user/updatepassword", async (req,res) => {
+    let {femail,userotp,inputtedvarcode,newpassword}=req.body;
+    console.log("Fmail, userotp, inputtedvarcode, newpassword: "+ femail +userotp+inputtedvarcode+newpassword);
+    let hash=await bcrypt.hash(newpassword,10);
+    pool.query(
+        `update users set userpassword=$1 where useremail=$2`,[hash,femail],
+        (err, results) => {
+            if (err) {
+                throw err;
+            }
+            else{
+                let no_err=[];
+                no_err.push({message:"Password updated.You can log in now."});
+                res.render("user/userlogin",{no_err});
+
+            }
+        }
+    );
+
+});
+
+
+
+
 
 app.post("/user/usersignup",async (req,res) =>{
 
