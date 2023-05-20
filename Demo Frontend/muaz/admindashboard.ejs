@@ -129,21 +129,11 @@
                 </div> -->
                 <div class="elem-group">
                   <label for="room-selection">From</label>
-                  <select id="departure" name="departure" required>
-                      <option value="">Choose...</option>
-                      <% for (const rows of results) { %>
-                      <option value="<%= rows.departure %>"><%= rows.departure %></option>
-                      <% } %>
-                  </select>
+                  <input type="text" id="departure" name="departure" placeholder="eg. DHAKA" pattern=[A-Z\sa-z]{3,20} required>
                 </div>
                 <div class="elem-group">
                   <label for="room-selection">To</label>
-                  <select id="destination" name="destination" required>
-                      <option value="">Choose...</option>
-                      <% for (const rows of results) { %>
-                      <option value="<%= rows.departure %>"><%= rows.departure %></option>
-                      <% } %>
-                  </select>
+                  <input type="text" id="destination" name="destination" placeholder="eg. SYLHET" pattern=[A-Z\sa-z]{3,20} required>
                 </div>
                 
                 <div class="elem-group">
