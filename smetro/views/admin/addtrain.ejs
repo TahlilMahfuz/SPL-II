@@ -15,131 +15,160 @@
 </head>
 
 <body>
-    <%-include('../partials/navadmin') %>
 
-    <div class="container my-4">
-        <div class="jumbotron">
-            <h1 class="text-center">Add a train</h1>
-            <form action="/admin/addtrain" method="post">
-    
-                <div class="form-row">
-                    <div class="col">
-                        <label for="trainname">Train Name</label>
-                        <input type="text" maxlength="100" class="form-control" id="trainname" name="trainname" required>
+
+
+    <section class="vh-1000" style="background-image: url('../img/metro4.jpg'); 
+            background-size: cover; background-position: center; margin-top: -10px;">
+            <%-include('../partials/navadmin') %>
+            
+            <h1 class="mb-3 text-white text-center" style="margin-top: 50px;">Available Tickets</h1>
+
+            <div class="container py-5 h-100" style="max-width: 90%">
+                <div class="row d-flex justify-content-center h-100">
+                <div class="col col-xl-10">
+
+
+
+
+
+
+                <!-- Paste rest of the code -->
+                <div class="container my-4">
+                    <div class="jumbotron">
+                        <h1 class="text-center">Add a train</h1>
+                        <form action="/admin/addtrain" method="post">
+                
+                            <div class="form-row">
+                                <div class="col">
+                                    <label for="trainname">Train Name</label>
+                                    <input type="text" maxlength="100" class="form-control" id="trainname" name="trainname" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label for="departure">Departure</label><br>
+                                    <select type="text" maxlength="100" class="form-control" id="departure" name="departure" required>
+                                        <option value="">Choose..</option>
+                                        <% for (const rows of results) { %>
+                                          <option value="<%= rows.departure %>"><%= rows.departure %></option>
+                                        <% } %>
+                                    </select>                          
+                                    </div>
+                                <div class="col">
+                                    <label for="destination">destination</label>
+                                    <select type="text" maxlength="100" class="form-control" id="destination" name="destination" required>
+                                        <option value="">Choose..</option>
+                                        <% for (const rows of results) { %>     
+                                          <option value="<%= rows.departure %>"><%= rows.departure %></option>
+                                        <% } %>
+                                    </select> 
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-row">
+                                <div class="form-row">
+                                    <div class="col">
+                                      <label for="journeydate">Date</label>
+                                      <input type="date" class="form-control" id="journeydate" name="journeydate" required>
+                                    </div>
+                                    <div class="col">
+                                      <label for="departuretime">Departure Time</label>
+                                      <input type="datetime-local" class="form-control" id="departuretime" name="departuretime" required>
+                                    </div>
+                                    <div class="col">
+                                      <label for="arrivaltime">Arrival Time</label>
+                                      <input type="datetime-local" class="form-control" id="arrivaltime" name="arrivaltime" required>
+                                    </div>
+                                    <div class="col">
+                                      <label for="seats">Seats</label>
+                                      <input type="number" class="form-control" id="seats" name="seats" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                    
+                            <button type="submit" class="btn btn-success">Add train information</button><br><br>
+                        </form>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="col">
-                        <label for="departure">Departure</label><br>
-                        <select type="text" maxlength="100" class="form-control" id="departure" name="departure" required>
-                            <option value="">Choose..</option>
-                            <% for (const rows of results) { %>
-                              <option value="<%= rows.departure %>"><%= rows.departure %></option>
-                            <% } %>
-                        </select>                          
+            
+            
+            
+            
+            
+                    <div class="card shadow mb-4 my-2">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-info text-center">Ticket List</h6>
                         </div>
-                    <div class="col">
-                        <label for="destination">destination</label>
-                        <select type="text" maxlength="100" class="form-control" id="destination" name="destination" required>
-                            <option value="">Choose..</option>
-                            <% for (const rows of results) { %>     
-                              <option value="<%= rows.departure %>"><%= rows.departure %></option>
-                            <% } %>
-                        </select> 
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Train ID</th>
+                                            <th>Name</th>
+                                            <th>Departure</th>
+                                            <th>Destination</th>
+                                            <th>Departure Time</th>
+                                            <th>Arrival Time</th>
+                                            <th>Seats</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% result.rows.forEach(function(data) { %>
+                                            <tr>
+                                                <td>
+                                                    <%= data.trainid %>
+                                                </td>
+                                                <td>
+                                                    <%= data.trainname %>
+                                                </td>
+                                                <td>
+                                                    <%= data.departure %>
+                                                </td>
+                                                <td>
+                                                    <%= data.destination %>
+                                                </td>
+                                                <td>
+                                                    <%= data.departuretime %>
+                                                </td>
+                                                <td>
+                                                    <%= data.arrivaltime %>
+                                                </td>
+                                                <td>
+                                                    <%= data.seats %>
+                                                </td>
+                                                <td>
+                                                    <form action="/admin/deletetrain" method="post">
+                                                        <input type="hidden" maxlength="50" class="form-control" 
+                                                        id="deletetrain" name="deletetrain" aria-describedby="emailHelp" value=<%=data.trainid %> required>
+                                                        <button type="submit" class="btn btn-danger">Delete</button><br><br>
+                                                    </form>
+                                                    
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <br>
-                <div class="form-row">
-                    <div class="form-row">
-                        <div class="col">
-                          <label for="journeydate">Date</label>
-                          <input type="date" class="form-control" id="journeydate" name="journeydate" required>
-                        </div>
-                        <div class="col">
-                          <label for="departuretime">Departure Time</label>
-                          <input type="datetime-local" class="form-control" id="departuretime" name="departuretime" required>
-                        </div>
-                        <div class="col">
-                          <label for="arrivaltime">Arrival Time</label>
-                          <input type="datetime-local" class="form-control" id="arrivaltime" name="arrivaltime" required>
-                        </div>
-                        <div class="col">
-                          <label for="seats">Seats</label>
-                          <input type="number" class="form-control" id="seats" name="seats" required>
-                        </div>
-                    </div>
-                </div>
-                <br>
-        
-                <button type="submit" class="btn btn-success">Add train information</button><br><br>
-            </form>
-        </div>
+                <!-- Paste rest of the code -->
 
 
 
 
 
-        <div class="card shadow mb-4 my-2">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-info text-center">Ticket List</h6>
+
+
+
+                
+              </div>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>Train ID</th>
-                                <th>Name</th>
-                                <th>Departure</th>
-                                <th>Destination</th>
-                                <th>Departure Time</th>
-                                <th>Arrival Time</th>
-                                <th>Seats</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% result.rows.forEach(function(data) { %>
-                                <tr>
-                                    <td>
-                                        <%= data.trainid %>
-                                    </td>
-                                    <td>
-                                        <%= data.trainname %>
-                                    </td>
-                                    <td>
-                                        <%= data.departure %>
-                                    </td>
-                                    <td>
-                                        <%= data.destination %>
-                                    </td>
-                                    <td>
-                                        <%= data.departuretime %>
-                                    </td>
-                                    <td>
-                                        <%= data.arrivaltime %>
-                                    </td>
-                                    <td>
-                                        <%= data.seats %>
-                                    </td>
-                                    <td>
-                                        <form action="/admin/deletetrain" method="post">
-                                            <input type="hidden" maxlength="50" class="form-control" 
-                                            id="deletetrain" name="deletetrain" aria-describedby="emailHelp" value=<%=data.trainid %> required>
-                                            <button type="submit" class="btn btn-danger">Delete</button><br><br>
-                                        </form>
-                                        
-                                    </td>
-                                </tr>
-                            <% }); %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>  
+          </div>
+        </section>
+      </div>
 
-
-
-    </div>
 
     
 

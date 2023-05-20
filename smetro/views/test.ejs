@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Add Train</title>
+    <title>Admin Dashboard</title>
+    <%-include('../partials/header') %>
 </head>
 
 <body>
@@ -18,99 +19,62 @@
 
     <div class="container my-4">
         <div class="jumbotron">
-            <a href="/admin/admindashboard"><button type="button" class="btn btn-secondary my-2">Add a route and fare</button></a>
-            <a href="/admin/addtrain"><button type="button" class="btn btn-secondary my-2">Add a train</button></a>
-            <a href="/admin/stuckpassengers"><button type="button" class="btn btn-secondary my-2">Stuck Passengers</button></a> 
-            <a href="/admin/addbalance"><button type="button" class="btn btn-secondary my-2">addbalance</button></a>
 
-
-            
-            <h1 class="text-center">Add a train</h1>
-            <form action="/admin/addtrain" method="post">
+            <h1 class="text-center">Add route fare</h1>
+            <form action="/admin/addroute" method="post">
     
                 <div class="form-row">
                     <div class="col">
-                        <label for="trainname">Train Name</label>
-                        <input type="text" maxlength="100" class="form-control" id="trainname" name="trainname" required>
+                        <label for="departure">From:</label>
+                        <input type="text" maxlength="20" class="form-control" id="departure" name="departure" required>
                     </div>
-                </div>
-                <div class="form-row">
                     <div class="col">
-                        <label for="departure">Departure</label><br>
-                        <select type="text" maxlength="100" class="form-control" id="departure" name="departure" required>
-                            <option value="">Choose..</option>
-                            <% for (const rows of results) { %>
-                              <option value="<%= rows.departure %>"><%= rows.departure %></option>
-                            <% } %>
-                        </select>                          
-                        </div>
-                    <div class="col">
-                        <label for="destination">destination</label>
-                        <select type="text" maxlength="100" class="form-control" id="destination" name="destination" required>
-                            <option value="">Choose..</option>
-                            <% for (const rows of results) { %>     
-                              <option value="<%= rows.departure %>"><%= rows.departure %></option>
-                            <% } %>
-                        </select> 
+                        <label for="destination">To:</label>
+                        <input type="text" maxlength="20" class="form-control" id="destination" name="destination" required>
                     </div>
                 </div>
-                <br>
-                <div class="form-row">
-                    <div class="form-row">
-                        <div class="col">
-                          <label for="journeydate">Date</label>
-                          <input type="date" class="form-control" id="journeydate" name="journeydate" required>
-                        </div>
-                        <div class="col">
-                          <label for="departuretime">Departure Time</label>
-                          <input type="datetime-local" class="form-control" id="departuretime" name="departuretime" required>
-                        </div>
-                        <div class="col">
-                          <label for="arrivaltime">Arrival Time</label>
-                          <input type="datetime-local" class="form-control" id="arrivaltime" name="arrivaltime" required>
-                        </div>
-                        <div class="col">
-                          <label for="seats">Seats</label>
-                          <input type="number" class="form-control" id="seats" name="seats" required>
-                        </div>
-                    </div>
-                </div>
-                <br>
+                  <br>
+                  <div class="form-row">
+                      <div class="col">
+                        <label for="amount">Amount</label>
+                        <input type="text" class="form-control" id="amount" name="amount" required>
+                      </div>
+                  </div>
+                  <br>
         
-                <button type="submit" class="btn btn-success">Add train information</button><br><br>
+                <button type="submit" class="btn btn-success">Add Route Fare</button><br><br>
             </form>
         </div>
 
+        
 
 
 
 
+
+        
+        
         <div class="card shadow mb-4 my-2">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-info text-center">Ticket List</h6>
+                <h6 class="m-0 font-weight-bold text-info text-center">Fare List</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-borderless" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Train ID</th>
-                                <th>Name</th>
-                                <th>Departure</th>
-                                <th>Destination</th>
-                                <th>Departure Time</th>
-                                <th>Arrival Time</th>
-                                <th>Seats</th>
+                                <th>Fare ID</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Fare</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% result.rows.forEach(function(data) { %>
+                            <% results.rows.forEach(function(data) { %>
                                 <tr>
                                     <td>
-                                        <%= data.trainid %>
-                                    </td>
-                                    <td>
-                                        <%= data.trainname %>
+                                        <%= data.fareid %>
                                     </td>
                                     <td>
                                         <%= data.departure %>
@@ -119,18 +83,12 @@
                                         <%= data.destination %>
                                     </td>
                                     <td>
-                                        <%= data.departuretime %>
+                                        <%= data.amount %>
                                     </td>
                                     <td>
-                                        <%= data.arrivaltime %>
-                                    </td>
-                                    <td>
-                                        <%= data.seats %>
-                                    </td>
-                                    <td>
-                                        <form action="/admin/deletetrain" method="post">
+                                        <form action="/admin/deletefare" method="post">
                                             <input type="hidden" maxlength="50" class="form-control" 
-                                            id="deletetrain" name="deletetrain" aria-describedby="emailHelp" value=<%=data.trainid %> required>
+                                            id="deletefare" name="deletefare" aria-describedby="emailHelp" value=<%=data.fareid %> required>
                                             <button type="submit" class="btn btn-danger">Delete</button><br><br>
                                         </form>
                                         
@@ -141,21 +99,16 @@
                     </table>
                 </div>
             </div>
-        </div>  
+        </div>
+
+
+
 
 
 
     </div>
 
-    
-
-
-    
-    
-
-
-
-
+    <%-include('../partials/footer') %>
     
 
     
