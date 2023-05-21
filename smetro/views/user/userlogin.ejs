@@ -2,16 +2,32 @@
 <html lang="en">
 
 <head>
-    <%-include('../partials/header') %>
-    <title>Login</title>
+  <title>Login</title>
+  <%-include('../partials/header') %>
+  <style>
+    .modal-header-warning {
+	color:#fff;
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #f0ad4e;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+    }
+  </style>
 </head>
 
 <body>
+
+
   <% if (messages.error) { %>
     <div class="modal fade show" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header modal-header-warning">
                     <h5 class="modal-title" id="errorModalLabel">Sorry!</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -36,6 +52,9 @@
     </script>
     <% delete messages.error; %>
 <% } %>
+
+
+
 
     
 <div>

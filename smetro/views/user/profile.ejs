@@ -14,34 +14,28 @@
     <!-- Customise Bootstrap for practical grid layouts -->
     <link rel="stylesheet" href="assets/css/bootstrap-custom.css">
     <%-include('../partials/header') %>
-
 </head>
 
 
 <body>
     <%-include('../partials/navlogged') %>
-        <section style="background-image: url('../img/metro4.jpg'); 
-    background-size: cover; background-position: center;background-color: #eee; height: 100vh;">
-            <div class="container py-5">
-                <div class="row">
-                    <div class="col">
-                        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
-                            <ol class="breadcrumb mb-0">
-
-                            </ol>
-                        </nav>
-                    </div>
+    <section style="background-image: url('../img/metro4.jpg'); background-size: cover; background-position: center; background-color: #eee; height: 100vh;">
+        <div class="container py-5 mx-auto">
+            <div class="row">
+                <div class="col">
+                    
                 </div>
+            </div>
 
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-5">
                         <div class="card mb-4">
                             <div class="card-body text-center">
                                 <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
                                     alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
                                 <h5 class="my-3">Hi! <p>Welcome to SMetro</p> </h5>
                                 <div class="d-flex justify-content-center mb-2">
-
+                                    
                                 </div>
                             </div>
                         </div>
@@ -53,40 +47,57 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="mb-0">Full Name</p>
+                                        <p class="mb-0" style="font-size: 15px;">Full Name</p>
                                     </div>
                                     <div class="col-sm-9">
-                                        <p class="text-muted mb-0"><%= data.username %></p>
+                                        <p class="text-muted mb-0"><strong style="font-size: 15px;""><%= data.username %></strong></p>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="mb-0">Email</p>
+                                        <p class="mb-0" style="font-size: 15px;">Email</p>
                                     </div>
                                     <div class="col-sm-9">
-                                        <p class="text-muted mb-0"><%= data.useremail%></p>
+                                        <p class="text-muted mb-0"><strong style="font-size: 15px;""><%= data.useremail%></strong></p>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="mb-0">Phone</p>
+                                        <p class="mb-0" style="font-size: 15px;">Phone</p>
                                     </div>
                                     <div class="col-sm-9">
-                                        <p class="text-muted mb-0"><%= data.userphone %></p>
+                                        <p class="text-muted mb-0"><strong style="font-size: 15px;""><%= data.userphone %></strong></p>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-3">
-                                        <p class="mb-0">User NID</p>
+                                        <p class="mb-0" style="font-size: 15px;">User NID</p>
                                     </div>
                                     <div class="col-sm-9">
-                                        <p class="text-muted mb-0"><%= data.usernid %></p>
+                                        <p class="text-muted mb-0"><strong style="font-size: 15px;""><%= data.usernid %></strong></p>
                                     </div>
                                 </div>
                                 <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0" style="font-size: 15px;">Available Balance</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0"><strong style="font-size: 15px;""><%= data.userbalance %></strong></p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0" style="font-size: 15px;">Registration Date</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0"><strong style="font-size: 15px;""><%= data.reg_date %></strong></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
