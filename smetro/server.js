@@ -334,10 +334,11 @@ app.post("/user/usersignup",async (req,res) =>{
 
 app.post("/user/register",async (req,res) =>{
     let {username,usernid,useremail,userphone,userpassword,userotp,uservarcode} = req.body;
+    console.log(username,usernid,useremail,userphone,userpassword,userotp,uservarcode);
     let error=[];
     if(userotp!=uservarcode){
         error.push({message:"Invalid varification code"});
-        res.render("user/register",{error});
+        res.render("user/usersignup",{error});
     }
     else{
         let hash=await bcrypt.hash(userpassword,10);
@@ -483,13 +484,50 @@ app.post("/user/query",async (req,res) =>{
 
 app.post("/user/varifybooking",(req,res) =>{
     const token = Math.floor(1000 + Math.random() * 9000);
-    let {trainid} = req.body;
-    req.session.user.bookingtoken=token;
-    let message="Your otp varification code for booking confirmation is ";
-    let subject="Verify your booking";
-    sendMail(req.session.user.useremail,token,subject,message);
-    let no_err=[];
-    res.render('user/varifybooking',{trainid});
+    let {trainid,fareamount} = req.body;
+    let userid=req.session.user.userid;
+    console.log("The userid is:" +userid);
+
+    pool.query(
+        `select userbalance from users where userid=$1`,[userid],
+        (err,results)=>{
+            if(err){
+                throw err;
+            }
+            console.log(results);
+            let bal=results.rows[0].userbalanace;
+            console.log("The bal is "+results.rows[0].userbalance);
+            console.log("the fareamount is"+fareamount);
+            let p=results.rows[0].userbalance-fareamount;
+            console.log("The minus balance is: "+p);
+            if(p<0){
+                let error=[];
+                error.push({ message: "You don't have enough balance.Please recharge." });
+                pool.query(
+                    `select distinct departure from fares`,
+                    (err,results)=>{
+                        if(err){
+                            throw err;
+                        }
+                        const resultsArray = Array.from(results.rows);
+                        res.render('user/dashboard',{results: resultsArray,error});
+                    }
+                );
+            }
+            else{
+                req.session.user.bookingtoken=token;
+                let message="Your otp varification code for booking confirmation is ";
+                let subject="Verify your booking";
+                sendMail(req.session.user.useremail,token,subject,message);
+                let no_err=[];
+                res.render('user/varifybooking',{trainid});
+            }
+        }
+    );
+
+
+    
+    
 });
 
 app.post("/user/confirmbook",async (req,res) =>{
@@ -648,9 +686,9 @@ app.post("/user/confirmbook",async (req,res) =>{
                     throw err;
                 }
                 let error=[];
-                error.push({message:"No such reservation exists."})
+                error.push({message:"Invalid token!"})
                 const resultsArray = Array.from(results.rows);
-                res.render('user/dashboard',{results:resultsArray,arr,error});
+                res.render('user/dashboard',{results:resultsArray,error});
             }
         );
     }
@@ -795,7 +833,7 @@ app.post('/user/checkValidity', (req, res) => {
                 else{
                     let no_err=[];
                     no_err.push({message:"The door is open!"});
-                    if(availability==3){
+                    if(availability>=3){
                         pool.query(
                             `update trains set seats=seats+1 where trainid=$1`,[trainid],
                             (err,results)=>{
