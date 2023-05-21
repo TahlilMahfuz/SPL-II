@@ -161,7 +161,7 @@ app.get("/user/prevtickets", async (req,res) => {
         }
     );
 });
-app.get("/user/userprofile", async (req,res) => {
+app.get("/user/profile", async (req,res) => {
     let userid=req.session.user.userid;
     pool.query(
         `select * from users where userid=$1`,[userid],
@@ -172,13 +172,22 @@ app.get("/user/userprofile", async (req,res) => {
             else if(results.rows.length>0){
                 console.log(results);
                 const resultsArray = Array.from(results.rows);
-                res.render('user/userprofile',{results});
+                res.render('user/profile',{results});
             }
         }
     );
 });
 app.get("/user/forgetpassword", async (req,res) => {
     res.render('user/forgetpassword');
+});
+app.get("/partials/contact", async (req,res) => {
+    res.render('partials/contact');
+});
+app.get("/partials/privacy", async (req,res) => {
+    res.render('partials/privacy');
+});
+app.get("/partials/terms", async (req,res) => {
+    res.render('partials/terms');
 });
 
 

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>profile</title>
+    <meta name="description"
+        content="A sample Bootstrap-based privacy web page for use with websites that use Google Analytics">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Customise Bootstrap for practical grid layouts -->
+    <link rel="stylesheet" href="assets/css/bootstrap-custom.css">
+    <%-include('../partials/header') %>
+
+</head>
+
+
+<body>
+    <%-include('../partials/navlogged') %>
+        <section style="background-image: url('../img/metro4.jpg'); 
+    background-size: cover; background-position: center;background-color: #eee; height: 100vh;">
+            <div class="container py-5">
+                <div class="row">
+                    <div class="col">
+                        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+                            <ol class="breadcrumb mb-0">
+
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                                    alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                                <h5 class="my-3">Hi! <p>Welcome to SMetro</p> </h5>
+                                <div class="d-flex justify-content-center mb-2">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% results.rows.forEach(function(data) { %>
+
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Full Name</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0"><%= data.username %></p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Email</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0"><%= data.useremail%></p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Phone</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0"><%= data.userphone %></p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">User NID</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0"><%= data.usernid %></p>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                    <% }); %>
+
+
+                </div>
+            </div>
+            </div>
+            </div>
+            </div>
+        </section>
+
+
+
+
+        <%-include('../partials/footer') %>
+
+
+
+            <!-- jQuery library -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <!-- Popper JS -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+            <!-- Latest compiled JavaScript -->
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+</body>
+
+</html>
