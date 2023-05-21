@@ -11,6 +11,11 @@ drop table trains;
 create table nidrecord(
     nid varchar primary key
 );
+
+ALTER TABLE users
+ALTER COLUMN userbalance DROP DEFAULT,
+ALTER COLUMN userbalance SET DEFAULT 100;
+
 create table users(
     userid serial primary key,
     Username varchar(100),
@@ -75,11 +80,11 @@ create table stuckpassengers(
 
 
 
-update stuckpassengers set status=status-1 where reservationid = 1
+update stuckpassengers set status=status-1 where reservationid = 1;
 select * from stuckpassengers;
 select * from reservation order by reservationid asc;
 select * from trains;
-select * from users;
+select * from users order by userid;
 select * from fares;
 update reservation set scanned_entertime=now() where reservationid=$1;
 select * from stuckpassengers natural join reservation natural join users where status=0;
