@@ -12,10 +12,6 @@ create table nidrecord(
     nid varchar primary key
 );
 
-ALTER TABLE users
-ALTER COLUMN userbalance DROP DEFAULT,
-ALTER COLUMN userbalance SET DEFAULT 100;
-
 create table users(
     userid serial primary key,
     Username varchar(100),
@@ -23,7 +19,7 @@ create table users(
     useremail varchar(100),
     userphone varchar(100),
     userpassword varchar(300),
-    userbalance int default 1000,
+    userbalance int default 100,
     reg_date date not null default current_timestamp,
     foreign key (usernid) references nidrecord(nid)
 );
@@ -79,13 +75,13 @@ create table stuckpassengers(
 
 
 
-
+insert into nidrecord values ('123');
 update stuckpassengers set status=status-1 where reservationid = 1;
 select * from stuckpassengers;
 select * from reservation order by reservationid asc;
 select * from trains;
 select * from users order by userid;
-select * from fares;
+select * from admins;
 update reservation set scanned_entertime=now() where reservationid=$1;
 select * from stuckpassengers natural join reservation natural join users where status=0;
 
@@ -130,7 +126,7 @@ SELECT reservationid, amount, departuretime,departuretime- current_date AS remai
       AND fares.departure = trains.departure
       AND reservationid = 1
 
-insert into nidrecord values ('123');
+
 
 update reservation set availability=2 where reservationid=6;
 delete from reservation where reservationid=5
