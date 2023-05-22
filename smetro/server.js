@@ -72,7 +72,7 @@ app.get("/user/dashboard",(req,res) =>{
             }
             console.log(results);
             const resultsArray = Array.from(results.rows);
-            res.render('user/dashboard',{results: resultsArray,arr});
+            res.render('user/dashboard',{results: resultsArray});
         }
     );
     
@@ -386,13 +386,10 @@ app.post("/user/bookticket",async (req,res) =>{
                 const resultsArray = Array.from(results.rows);
                 let error=[];
                 error.push({ message: "Please select different departure and destination" });
-                res.render('user/dashboard',{results: resultsArray,arr,error});
+                res.render('user/dashboard',{results: resultsArray,error});
             }
         );
     }
-
-    let arr=[];
-    arr['username']=req.session.user.username;
 
     pool.query(
         `SELECT * FROM trains natural join fares 
@@ -408,7 +405,7 @@ app.post("/user/bookticket",async (req,res) =>{
           if (results.rows.length > 0) {
             console.log(results.rows.length);
             req.session.traininfo=results;
-            res.render("user/bookticket", {results,arr});
+            res.render("user/bookticket", {results});
           } 
           else {
             let error = [];
@@ -422,7 +419,7 @@ app.post("/user/bookticket",async (req,res) =>{
                     const resultsArray = Array.from(results.rows);
                     
                     error.push({ message: "Sorry, no trains available for this date" });
-                    res.render('user/dashboard',{results: resultsArray,arr,error});
+                    res.render('user/dashboard',{results: resultsArray,error});
                 }
             );
           }
@@ -743,7 +740,7 @@ app.post('/user/checkValidity', (req, res) => {
                 const departureTime = results.rows[0].departuretime;
                 const availability = results.rows[0].availability;
                 const currentTime = new Date();
-                if(departureTime<currentTime && availability==0){
+                if(departureTime<currentTime && availability==1){
                     let error=[];
                     error.push({message:"Sorry!You have missed the train."});
                     res.render('user/doorSystem',{error});
@@ -768,12 +765,14 @@ app.post('/user/checkValidity', (req, res) => {
                         let error=[];
                         error.push({message:"No such reservation exists."})
                         const resultsArray = Array.from(results.rows);
-                        res.render('user/dashboard',{results:resultsArray,arr,error});
+                        res.render('user/dashboard',{results:resultsArray,error});
                     }
                 );
             }
         }
     );
+
+
     pool.query(
         `update reservation
         set 
@@ -854,6 +853,7 @@ app.post('/user/checkValidity', (req, res) => {
             }
         }
     );
+    
 });
 app.post("/user/refundticket", (req, res) => {
     let { refundid } = req.body;
@@ -1468,50 +1468,42 @@ app.post("/admin/release",async (req,res) =>{
 })
 app.post("/admin/addbalance",async (req,res) =>{
     let {amount,userphone} = req.body;
-    pool.query(
-        `select * from users where userphone=$1`,[userphone],
-        (err, results) => {
-            if (err) {
-                throw err;
-            }
-            else if(results.rows.length>0){
-                pool.query(
-                    `update users set userbalance=userbalance+$1 where userphone = $2 returning userbalance`,[amount,userphone],
-                    (err, results) => {
-                        if (err) {
-                            throw err;
+    if(amount>0){
+        pool.query(
+            `select * from users where userphone=$1`,[userphone],
+            (err, results) => {
+                if (err) {
+                    throw err;
+                }
+                else if(results.rows.length>0){
+                    pool.query(
+                        `update users set userbalance=userbalance+$1 where userphone = $2 returning userbalance`,[amount,userphone],
+                        (err, results) => {
+                            if (err) {
+                                throw err;
+                            }
+                            else{
+                                console.log(results);
+                                let no_err=[];
+                                no_err.push({message:"Account has been recharged"})
+                                res.render('admin/addbalance',{results,no_err});
+                            }
                         }
-                        else{
-                            console.log(results);
-                            let no_err=[];
-                            no_err.push({message:"Account has been recharged"})
-                            res.render('admin/addbalance',{results,no_err});
-                        }
-                    }
-                );
+                    );
+                }
+                else{
+                    let error=[];
+                    error.push({message:"No user exists with this Phone number"});
+                    res.render('admin/addbalance',{error});
+                }
             }
-            else{
-                let error=[];
-                error.push({message:"No user exists with this Phone number"});
-                res.render('admin/addbalance',{error});
-            }
-        }
-    );
-    
-    pool.query(
-        `update users set userbalance=userbalance+$1 where userphone = $2 returning userbalance`,[amount,userphone],
-        (err, results) => {
-            if (err) {
-                throw err;
-            }
-            else{
-                console.log(results);
-                let no_err=[];
-                no_err.push({message:"Account has been recharged"})
-                res.render('admin/addbalance',{results,no_err});
-            }
-        }
-    );
+        );
+    }
+    else{
+        let error=[];
+        error.push({message:"Please enter a positive amount"});
+        res.render('admin/addbalance',{error});
+    }
 })
 
 
