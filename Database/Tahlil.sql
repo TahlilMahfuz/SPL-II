@@ -1,4 +1,6 @@
 -- SMETRO
+create database smetro;
+
 drop table stuckpassengers;
 drop table reservation;
 drop table users;
@@ -6,7 +8,6 @@ drop table nidrecord;
 drop table admins;
 drop table fares;
 drop table trains;
-
 
 create table nidrecord(
     nid varchar primary key
